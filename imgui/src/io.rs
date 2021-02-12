@@ -52,6 +52,8 @@ bitflags! {
         ///
         /// Not used by core imgui-rs.
         const IS_TOUCH_SCREEN = sys::ImGuiConfigFlags_IsTouchScreen;
+
+        const DOCKING_ENABLE = sys::ImGuiConfigFlags_DockingEnable;
     }
 }
 
@@ -174,6 +176,43 @@ pub struct Io {
     /// framebuffer coordinates
     pub display_framebuffer_scale: [f32; 2],
 
+    /// Simplified docking mode: disable window splitting, so docking is limited to merging
+    /// multiple windows together into tab-bars.
+    pub docking_no_split: bool,
+
+    /// Enable docking with holding Shift key (reduce visual noise, allows dropping in wider space)
+    pub docking_with_shift: bool,
+
+    /// [BETA] [FIXME: This currently creates regression with auto-sizing and general overhead]
+    /// Make every single floating window display within a docking node.
+    pub docking_always_tabbar: bool,
+
+    /// [BETA] Make window or viewport transparent when docking and only display docking boxes on
+    /// the target viewport. Useful if rendering of multiple viewport cannot be synced. Best
+    /// used with viewports auto merging.
+    pub docking_transparent_payload: bool,
+
+    /// Set to make all floating imgui windows always create their own viewport. Otherwise,
+    /// they are merged into the main host viewports when overlapping it. May also set
+    /// ImGuiViewportFlags_NoAutoMerge on individual viewport.
+    pub viewports_no_auto_merge: bool,
+
+    /// Disable default OS task bar icon flag for secondary viewports. When a viewport
+    /// doesn't want a task bar icon, ImGuiViewportFlags_NoTaskBarIcon will be set on it.
+    pub viewports_no_taskbar_icon: bool,
+
+    /// [BETA] Disable default OS window decoration flag for secondary viewports. When a viewport
+    /// doesn't want window decorations, ImGuiViewportFlags_NoDecoration will be set on it.
+    /// Enabling decoration can create subsequent issues at OS levels (e.g. minimum window size).
+    pub viewports_no_decoration: bool,
+
+    /// Disable default OS parenting to main viewport for secondary viewports. By default,
+    /// viewports are marked with ParentViewportId = <main_viewport>, expecting the platform
+    /// back-end to setup a parent/child relationship between the OS windows (some back-end
+    /// may ignore this). Set to true if you want the default to be 0, then all viewports
+    /// will be top-level OS windows.
+    pub viewports_no_default_parent: bool,
+
     /// Request imgui-rs to draw a mouse cursor for you
     pub mouse_draw_cursor: bool,
     /// macOS-style input behavior.
@@ -215,8 +254,6 @@ pub struct Io {
     pub(crate) set_clipboard_text_fn:
         Option<unsafe extern "C" fn(user_data: *mut c_void, text: *const c_char)>,
     pub(crate) clipboard_user_data: *mut c_void,
-    ime_set_input_screen_pos_fn: Option<unsafe extern "C" fn(x: c_int, y: c_int)>,
-    ime_window_handle: *mut c_void,
     /// Mouse position, in pixels.
     ///
     /// Set to [f32::MAX, f32::MAX] if mouse is unavailable (on another screen, etc.).
@@ -232,6 +269,12 @@ pub struct Io {
     /// Most users don't have a mouse with a horizontal wheel, and may not be filled by all
     /// backends.
     pub mouse_wheel_h: f32,
+    /// (Optional) When using multiple viewports: viewport the OS mouse cursor is hovering
+    /// _IGNORING_ viewports with the ImGuiViewportFlags_NoInputs flag, and _REGARDLESS_ of
+    /// whether another viewport is focused. Set io.BackendFlags |= ImGuiBackendFlags_HasMouseHoveredViewport
+    /// if you can provide this info. If you don't imgui will infer the value using the
+    /// rectangles and last focused time of the viewports it knows about (ignoring other OS windows).
+    pub mouse_hovered_viewport: sys::ImGuiID,
     /// Keyboard modifier pressed: Control
     pub key_ctrl: bool,
     /// Keyboard modifier pressed: Shift
@@ -438,8 +481,6 @@ fn test_io_memory_layout() {
     assert_field_offset!(get_clipboard_text_fn, GetClipboardTextFn);
     assert_field_offset!(set_clipboard_text_fn, SetClipboardTextFn);
     assert_field_offset!(clipboard_user_data, ClipboardUserData);
-    assert_field_offset!(ime_set_input_screen_pos_fn, ImeSetInputScreenPosFn);
-    assert_field_offset!(ime_window_handle, ImeWindowHandle);
     assert_field_offset!(mouse_pos, MousePos);
     assert_field_offset!(mouse_down, MouseDown);
     assert_field_offset!(mouse_wheel, MouseWheel);
