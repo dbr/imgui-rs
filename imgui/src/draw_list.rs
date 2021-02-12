@@ -1,10 +1,48 @@
+use bitflags::bitflags;
+
 use crate::ImColor32;
 use sys::ImDrawList;
 
 use super::Ui;
-use crate::legacy::ImDrawCornerFlags;
+use crate::render::renderer::TextureId;
 
 use std::marker::PhantomData;
+
+bitflags!(
+    /// Flags for indictating which corner of a rectangle should be rounded
+    #[repr(C)]
+    pub struct CornerFlags: u32 {
+        const NONE = sys::ImDrawCornerFlags_None;
+        const TOP_LEFT = sys::ImDrawCornerFlags_TopLeft;
+        const TOP_RIGHT = sys::ImDrawCornerFlags_TopRight;
+        const BOT_LEFT = sys::ImDrawCornerFlags_BotLeft;
+        const BOT_RIGHT = sys::ImDrawCornerFlags_BotRight;
+        const TOP = sys::ImDrawCornerFlags_Top;
+        const BOT = sys::ImDrawCornerFlags_Bot;
+        const LEFT = sys::ImDrawCornerFlags_Left;
+        const RIGHT = sys::ImDrawCornerFlags_Right;
+        const ALL = sys::ImDrawCornerFlags_All;
+    }
+);
+
+bitflags!(
+    /// Draw list flags
+    #[repr(C)]
+    pub struct DrawListFlags: u32 {
+        const NONE = sys::ImDrawListFlags_None;
+        /// Enable anti-aliased lines/borders (*2 the number of triangles for 1.0f wide line or lines
+        /// thin enough to be drawn using textures, otherwise *3 the number of triangles)
+        const ANTI_ALIASED_LINES = sys::ImDrawListFlags_AntiAliasedLines;
+        /// Enable anti-aliased lines/borders using textures when possible. Require backend to render
+        /// with bilinear filtering.
+        const ANTI_ALIASED_LINES_USE_TEX = sys::ImDrawListFlags_AntiAliasedLinesUseTex;
+        /// Enable anti-aliased edge around filled shapes (rounded rectangles, circles).
+        const ANTI_ALIASED_FILL = sys::ImDrawListFlags_AntiAliasedFill;
+        /// Can emit 'VtxOffset > 0' to allow large meshes. Set when
+        /// [`BackendFlags::RENDERER_HAS_VTX_OFFSET`] is enabled.
+        const ALLOW_VTX_OFFSET = sys::ImDrawListFlags_AllowVtxOffset;
+    }
+);
 
 /// Object implementing the custom draw API.
 ///
@@ -251,6 +289,56 @@ impl<'ui> DrawListMut<'ui> {
     }
 }
 
+/// # Images
+impl<'ui> DrawListMut<'ui> {
+    /// Draw the specified image in the rect specified by `p_min` to
+    /// `p_max`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use imgui::*;
+    /// fn custom_button(ui: &Ui, img_id: TextureId) {
+    ///     // Invisible button is good widget to customise with image
+    ///     ui.invisible_button(im_str!("custom_button"), [100.0, 20.0]);
+    ///
+    ///     // Get draw list and draw image over invisible button
+    ///     let draw_list = ui.get_window_draw_list();
+    ///     draw_list
+    ///         .add_image(img_id, ui.item_rect_min(), ui.item_rect_max())
+    ///         .build();
+    /// }
+    /// ```
+    pub fn add_image(&'ui self, texture_id: TextureId, p_min: [f32; 2], p_max: [f32; 2]) -> Image {
+        Image::new(self, texture_id, p_min, p_max)
+    }
+
+    /// Draw the specified image to a quad with the specified
+    /// coordinates. Similar to [`DrawListMut::add_image`] but this
+    /// method is able to draw non-rectangle images.
+    pub fn add_image_quad(
+        &'ui self,
+        texture_id: TextureId,
+        p1: [f32; 2],
+        p2: [f32; 2],
+        p3: [f32; 2],
+        p4: [f32; 2],
+    ) -> ImageQuad {
+        ImageQuad::new(self, texture_id, p1, p2, p3, p4)
+    }
+
+    /// Draw the speciied image, with rounded corners
+    pub fn add_image_rounded(
+        &'ui self,
+        texture_id: TextureId,
+        p_min: [f32; 2],
+        p_max: [f32; 2],
+        rounding: f32,
+    ) -> ImageRounded {
+        ImageRounded::new(self, texture_id, p_min, p_max, rounding)
+    }
+}
+
 /// Represents a line about to be drawn
 #[must_use = "should call .build() to draw the object"]
 pub struct Line<'ui> {
@@ -302,7 +390,7 @@ pub struct Rect<'ui> {
     p2: [f32; 2],
     color: ImColor32,
     rounding: f32,
-    flags: ImDrawCornerFlags,
+    flags: CornerFlags,
     thickness: f32,
     filled: bool,
     draw_list: &'ui DrawListMut<'ui>,
@@ -318,7 +406,7 @@ impl<'ui> Rect<'ui> {
             p2,
             color: c.into(),
             rounding: 0.0,
-            flags: ImDrawCornerFlags::All,
+            flags: CornerFlags::ALL,
             thickness: 1.0,
             filled: false,
             draw_list,
@@ -334,25 +422,25 @@ impl<'ui> Rect<'ui> {
 
     /// Set flag to indicate if rectangle's top-left corner will be rounded.
     pub fn round_top_left(mut self, value: bool) -> Self {
-        self.flags.set(ImDrawCornerFlags::TopLeft, value);
+        self.flags.set(CornerFlags::TOP_LEFT, value);
         self
     }
 
     /// Set flag to indicate if rectangle's top-right corner will be rounded.
     pub fn round_top_right(mut self, value: bool) -> Self {
-        self.flags.set(ImDrawCornerFlags::TopRight, value);
+        self.flags.set(CornerFlags::TOP_RIGHT, value);
         self
     }
 
     /// Set flag to indicate if rectangle's bottom-left corner will be rounded.
     pub fn round_bot_left(mut self, value: bool) -> Self {
-        self.flags.set(ImDrawCornerFlags::BotLeft, value);
+        self.flags.set(CornerFlags::BOT_LEFT, value);
         self
     }
 
     /// Set flag to indicate if rectangle's bottom-right corner will be rounded.
     pub fn round_bot_right(mut self, value: bool) -> Self {
-        self.flags.set(ImDrawCornerFlags::BotRight, value);
+        self.flags.set(CornerFlags::BOT_RIGHT, value);
         self
     }
 
@@ -378,7 +466,7 @@ impl<'ui> Rect<'ui> {
                     self.p2.into(),
                     self.color.into(),
                     self.rounding,
-                    self.flags.bits(),
+                    self.flags.bits() as i32,
                 );
             }
         } else {
@@ -389,7 +477,7 @@ impl<'ui> Rect<'ui> {
                     self.p2.into(),
                     self.color.into(),
                     self.rounding,
-                    self.flags.bits(),
+                    self.flags.bits() as i32,
                     self.thickness,
                 );
             }
@@ -602,6 +690,266 @@ impl<'ui> BezierCurve<'ui> {
                 self.thickness,
                 self.num_segments.unwrap_or(0) as i32,
             )
+        }
+    }
+}
+
+/// Represents a image about to be drawn
+#[must_use = "should call .build() to draw the object"]
+pub struct Image<'ui> {
+    texture_id: TextureId,
+    p_min: [f32; 2],
+    p_max: [f32; 2],
+    uv_min: [f32; 2],
+    uv_max: [f32; 2],
+    col: ImColor32,
+    draw_list: &'ui DrawListMut<'ui>,
+}
+
+impl<'ui> Image<'ui> {
+    fn new(
+        draw_list: &'ui DrawListMut,
+        texture_id: TextureId,
+        p_min: [f32; 2],
+        p_max: [f32; 2],
+    ) -> Self {
+        Self {
+            texture_id,
+            p_min,
+            p_max,
+            uv_min: [0.0, 0.0],
+            uv_max: [1.0, 1.0],
+            col: [1.0, 1.0, 1.0, 1.0].into(),
+            draw_list,
+        }
+    }
+
+    /// Set uv_min (default `[0.0, 0.0]`)
+    pub fn uv_min(mut self, uv_min: [f32; 2]) -> Self {
+        self.uv_min = uv_min;
+        self
+    }
+    /// Set uv_max (default `[1.0, 1.0]`)
+    pub fn uv_max(mut self, uv_max: [f32; 2]) -> Self {
+        self.uv_max = uv_max;
+        self
+    }
+
+    /// Set color tint (default: no tint/white `[1.0, 1.0, 1.0, 1.0]`)
+    pub fn col<C>(mut self, col: C) -> Self
+    where
+        C: Into<ImColor32>,
+    {
+        self.col = col.into();
+        self
+    }
+
+    /// Draw the image on the window.
+    pub fn build(self) {
+        use std::os::raw::c_void;
+
+        unsafe {
+            sys::ImDrawList_AddImage(
+                self.draw_list.draw_list,
+                self.texture_id.id() as *mut c_void,
+                self.p_min.into(),
+                self.p_max.into(),
+                self.uv_min.into(),
+                self.uv_max.into(),
+                self.col.into(),
+            );
+        }
+    }
+}
+
+/// Represents a image about to be drawn
+#[must_use = "should call .build() to draw the object"]
+pub struct ImageQuad<'ui> {
+    texture_id: TextureId,
+    p1: [f32; 2],
+    p2: [f32; 2],
+    p3: [f32; 2],
+    p4: [f32; 2],
+    uv1: [f32; 2],
+    uv2: [f32; 2],
+    uv3: [f32; 2],
+    uv4: [f32; 2],
+    col: ImColor32,
+    draw_list: &'ui DrawListMut<'ui>,
+}
+
+impl<'ui> ImageQuad<'ui> {
+    fn new(
+        draw_list: &'ui DrawListMut,
+        texture_id: TextureId,
+        p1: [f32; 2],
+        p2: [f32; 2],
+        p3: [f32; 2],
+        p4: [f32; 2],
+    ) -> Self {
+        Self {
+            texture_id,
+            p1,
+            p2,
+            p3,
+            p4,
+            uv1: [0.0, 0.0],
+            uv2: [1.0, 0.0],
+            uv3: [1.0, 1.0],
+            uv4: [0.0, 1.0],
+            col: [1.0, 1.0, 1.0, 1.0].into(),
+            draw_list,
+        }
+    }
+
+    /// Set uv coordinates of each point of the quad. If not called, defaults are:
+    ///
+    /// ```
+    /// uv1: [0, 0],
+    /// uv2: [1, 0],
+    /// uv3: [1, 1],
+    /// uv4: [0, 1],
+    /// ```
+    pub fn uv(mut self, uv1: [f32; 2], uv2: [f32; 2], uv3: [f32; 2], uv4: [f32; 2]) -> Self {
+        self.uv1 = uv1;
+        self.uv2 = uv2;
+        self.uv3 = uv3;
+        self.uv4 = uv4;
+        self
+    }
+
+    /// Set color tint (default: no tint/white `[1.0, 1.0, 1.0, 1.0]`)
+    pub fn col<C>(mut self, col: C) -> Self
+    where
+        C: Into<ImColor32>,
+    {
+        self.col = col.into();
+        self
+    }
+
+    /// Draw the image on the window.
+    pub fn build(self) {
+        use std::os::raw::c_void;
+
+        unsafe {
+            sys::ImDrawList_AddImageQuad(
+                self.draw_list.draw_list,
+                self.texture_id.id() as *mut c_void,
+                self.p1.into(),
+                self.p2.into(),
+                self.p3.into(),
+                self.p4.into(),
+                self.uv1.into(),
+                self.uv2.into(),
+                self.uv3.into(),
+                self.uv4.into(),
+                self.col.into(),
+            );
+        }
+    }
+}
+
+/// Represents a image about to be drawn
+#[must_use = "should call .build() to draw the object"]
+pub struct ImageRounded<'ui> {
+    texture_id: TextureId,
+    p_min: [f32; 2],
+    p_max: [f32; 2],
+    uv_min: [f32; 2],
+    uv_max: [f32; 2],
+    col: ImColor32,
+    rounding: f32,
+    rounding_corners: CornerFlags,
+    draw_list: &'ui DrawListMut<'ui>,
+}
+
+impl<'ui> ImageRounded<'ui> {
+    fn new(
+        draw_list: &'ui DrawListMut,
+        texture_id: TextureId,
+        p_min: [f32; 2],
+        p_max: [f32; 2],
+        rounding: f32,
+    ) -> Self {
+        Self {
+            texture_id,
+            p_min,
+            p_max,
+            uv_min: [0.0, 0.0],
+            uv_max: [1.0, 1.0],
+            col: [1.0, 1.0, 1.0, 1.0].into(),
+            rounding,
+            rounding_corners: CornerFlags::ALL,
+            draw_list,
+        }
+    }
+
+    /// Set uv_min (default `[0.0, 0.0]`)
+    pub fn uv_min(mut self, uv_min: [f32; 2]) -> Self {
+        self.uv_min = uv_min;
+        self
+    }
+    /// Set uv_max (default `[1.0, 1.0]`)
+    pub fn uv_max(mut self, uv_max: [f32; 2]) -> Self {
+        self.uv_max = uv_max;
+        self
+    }
+
+    /// Set color tint (default: no tint/white `[1.0, 1.0, 1.0, 1.0]`)
+    pub fn col<C>(mut self, col: C) -> Self
+    where
+        C: Into<ImColor32>,
+    {
+        self.col = col.into();
+        self
+    }
+
+    /// Set flag to indicate rounding on all all corners.
+    pub fn round_all(mut self, value: bool) -> Self {
+        self.rounding_corners.set(CornerFlags::ALL, value);
+        self
+    }
+
+    /// Set flag to indicate if image's top-left corner will be rounded.
+    pub fn round_top_left(mut self, value: bool) -> Self {
+        self.rounding_corners.set(CornerFlags::TOP_LEFT, value);
+        self
+    }
+
+    /// Set flag to indicate if image's top-right corner will be rounded.
+    pub fn round_top_right(mut self, value: bool) -> Self {
+        self.rounding_corners.set(CornerFlags::TOP_RIGHT, value);
+        self
+    }
+
+    /// Set flag to indicate if image's bottom-left corner will be rounded.
+    pub fn round_bot_left(mut self, value: bool) -> Self {
+        self.rounding_corners.set(CornerFlags::BOT_LEFT, value);
+        self
+    }
+
+    /// Set flag to indicate if image's bottom-right corner will be rounded.
+    pub fn round_bot_right(mut self, value: bool) -> Self {
+        self.rounding_corners.set(CornerFlags::BOT_RIGHT, value);
+        self
+    }
+
+    /// Draw the image on the window.
+    pub fn build(self) {
+        use std::os::raw::c_void;
+
+        unsafe {
+            sys::ImDrawList_AddImageRounded(
+                self.draw_list.draw_list,
+                self.texture_id.id() as *mut c_void,
+                self.p_min.into(),
+                self.p_max.into(),
+                self.uv_min.into(),
+                self.uv_max.into(),
+                self.col.into(),
+                self.rounding,
+                self.rounding_corners.bits() as i32,
+            );
         }
     }
 }
