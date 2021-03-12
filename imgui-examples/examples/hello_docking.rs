@@ -8,7 +8,7 @@ fn main() {
     let mut system = support::init(file!());
     system.imgui.io_mut().config_flags |= imgui::ConfigFlags::DOCKING_ENABLE;
 
-    let main_dockspace: Mutex<Option<imgui::docking::DockSpaceNode>> = Mutex::new(None);
+    let main_dockspace: Mutex<Option<imgui::docking::DockNode>> = Mutex::new(None);
 
     system.main_loop(move |_, ui| {
         // Create top level floating window
@@ -27,7 +27,12 @@ fn main() {
 
             if ui.button(im_str!("Dock me")) {
                 match &*main_dockspace.lock().unwrap() {
-                    Some(d) => {d.split(Direction::Left, 0.5, |id|{id.dock_window(im_str!("Left"))}, |_id|{})},
+                    Some(d) => d.split(
+                        Direction::Left,
+                        0.5,
+                        |id| id.dock_window(im_str!("Left")),
+                        |_id| {},
+                    ),
                     None => {}
                 }
             }
