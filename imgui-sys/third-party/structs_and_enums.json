@@ -126,6 +126,21 @@
         "calc_value": 8,
         "name": "ImGuiBackendFlags_RendererHasVtxOffset",
         "value": "1 << 3"
+      },
+      {
+        "calc_value": 1024,
+        "name": "ImGuiBackendFlags_PlatformHasViewports",
+        "value": "1 << 10"
+      },
+      {
+        "calc_value": 2048,
+        "name": "ImGuiBackendFlags_HasMouseHoveredViewport",
+        "value": "1 << 11"
+      },
+      {
+        "calc_value": 4096,
+        "name": "ImGuiBackendFlags_RendererHasViewports",
+        "value": "1 << 12"
       }
     ],
     "ImGuiButtonFlags_": [
@@ -353,83 +368,93 @@
       },
       {
         "calc_value": 38,
-        "name": "ImGuiCol_PlotLines",
+        "name": "ImGuiCol_DockingPreview",
         "value": "38"
       },
       {
         "calc_value": 39,
-        "name": "ImGuiCol_PlotLinesHovered",
+        "name": "ImGuiCol_DockingEmptyBg",
         "value": "39"
       },
       {
         "calc_value": 40,
-        "name": "ImGuiCol_PlotHistogram",
+        "name": "ImGuiCol_PlotLines",
         "value": "40"
       },
       {
         "calc_value": 41,
-        "name": "ImGuiCol_PlotHistogramHovered",
+        "name": "ImGuiCol_PlotLinesHovered",
         "value": "41"
       },
       {
         "calc_value": 42,
-        "name": "ImGuiCol_TableHeaderBg",
+        "name": "ImGuiCol_PlotHistogram",
         "value": "42"
       },
       {
         "calc_value": 43,
-        "name": "ImGuiCol_TableBorderStrong",
+        "name": "ImGuiCol_PlotHistogramHovered",
         "value": "43"
       },
       {
         "calc_value": 44,
-        "name": "ImGuiCol_TableBorderLight",
+        "name": "ImGuiCol_TableHeaderBg",
         "value": "44"
       },
       {
         "calc_value": 45,
-        "name": "ImGuiCol_TableRowBg",
+        "name": "ImGuiCol_TableBorderStrong",
         "value": "45"
       },
       {
         "calc_value": 46,
-        "name": "ImGuiCol_TableRowBgAlt",
+        "name": "ImGuiCol_TableBorderLight",
         "value": "46"
       },
       {
         "calc_value": 47,
-        "name": "ImGuiCol_TextSelectedBg",
+        "name": "ImGuiCol_TableRowBg",
         "value": "47"
       },
       {
         "calc_value": 48,
-        "name": "ImGuiCol_DragDropTarget",
+        "name": "ImGuiCol_TableRowBgAlt",
         "value": "48"
       },
       {
         "calc_value": 49,
-        "name": "ImGuiCol_NavHighlight",
+        "name": "ImGuiCol_TextSelectedBg",
         "value": "49"
       },
       {
         "calc_value": 50,
-        "name": "ImGuiCol_NavWindowingHighlight",
+        "name": "ImGuiCol_DragDropTarget",
         "value": "50"
       },
       {
         "calc_value": 51,
-        "name": "ImGuiCol_NavWindowingDimBg",
+        "name": "ImGuiCol_NavHighlight",
         "value": "51"
       },
       {
         "calc_value": 52,
-        "name": "ImGuiCol_ModalWindowDimBg",
+        "name": "ImGuiCol_NavWindowingHighlight",
         "value": "52"
       },
       {
         "calc_value": 53,
-        "name": "ImGuiCol_COUNT",
+        "name": "ImGuiCol_NavWindowingDimBg",
         "value": "53"
+      },
+      {
+        "calc_value": 54,
+        "name": "ImGuiCol_ModalWindowDimBg",
+        "value": "54"
+      },
+      {
+        "calc_value": 55,
+        "name": "ImGuiCol_COUNT",
+        "value": "55"
       }
     ],
     "ImGuiColorEditFlags_": [
@@ -690,6 +715,26 @@
         "value": "1 << 5"
       },
       {
+        "calc_value": 64,
+        "name": "ImGuiConfigFlags_DockingEnable",
+        "value": "1 << 6"
+      },
+      {
+        "calc_value": 1024,
+        "name": "ImGuiConfigFlags_ViewportsEnable",
+        "value": "1 << 10"
+      },
+      {
+        "calc_value": 16384,
+        "name": "ImGuiConfigFlags_DpiEnableScaleViewports",
+        "value": "1 << 14"
+      },
+      {
+        "calc_value": 32768,
+        "name": "ImGuiConfigFlags_DpiEnableScaleFonts",
+        "value": "1 << 15"
+      },
+      {
         "calc_value": 1048576,
         "name": "ImGuiConfigFlags_IsSRGB",
         "value": "1 << 20"
@@ -787,6 +832,43 @@
         "calc_value": 4,
         "name": "ImGuiDir_COUNT",
         "value": "4"
+      }
+    ],
+    "ImGuiDockNodeFlags_": [
+      {
+        "calc_value": 0,
+        "name": "ImGuiDockNodeFlags_None",
+        "value": "0"
+      },
+      {
+        "calc_value": 1,
+        "name": "ImGuiDockNodeFlags_KeepAliveOnly",
+        "value": "1 << 0"
+      },
+      {
+        "calc_value": 4,
+        "name": "ImGuiDockNodeFlags_NoDockingInCentralNode",
+        "value": "1 << 2"
+      },
+      {
+        "calc_value": 8,
+        "name": "ImGuiDockNodeFlags_PassthruCentralNode",
+        "value": "1 << 3"
+      },
+      {
+        "calc_value": 16,
+        "name": "ImGuiDockNodeFlags_NoSplit",
+        "value": "1 << 4"
+      },
+      {
+        "calc_value": 32,
+        "name": "ImGuiDockNodeFlags_NoResize",
+        "value": "1 << 5"
+      },
+      {
+        "calc_value": 64,
+        "name": "ImGuiDockNodeFlags_AutoHideTabBar",
+        "value": "1 << 6"
       }
     ],
     "ImGuiDragDropFlags_": [
@@ -2196,6 +2278,56 @@
         "calc_value": 4,
         "name": "ImGuiViewportFlags_OwnedByApp",
         "value": "1 << 2"
+      },
+      {
+        "calc_value": 8,
+        "name": "ImGuiViewportFlags_NoDecoration",
+        "value": "1 << 3"
+      },
+      {
+        "calc_value": 16,
+        "name": "ImGuiViewportFlags_NoTaskBarIcon",
+        "value": "1 << 4"
+      },
+      {
+        "calc_value": 32,
+        "name": "ImGuiViewportFlags_NoFocusOnAppearing",
+        "value": "1 << 5"
+      },
+      {
+        "calc_value": 64,
+        "name": "ImGuiViewportFlags_NoFocusOnClick",
+        "value": "1 << 6"
+      },
+      {
+        "calc_value": 128,
+        "name": "ImGuiViewportFlags_NoInputs",
+        "value": "1 << 7"
+      },
+      {
+        "calc_value": 256,
+        "name": "ImGuiViewportFlags_NoRendererClear",
+        "value": "1 << 8"
+      },
+      {
+        "calc_value": 512,
+        "name": "ImGuiViewportFlags_TopMost",
+        "value": "1 << 9"
+      },
+      {
+        "calc_value": 1024,
+        "name": "ImGuiViewportFlags_Minimized",
+        "value": "1 << 10"
+      },
+      {
+        "calc_value": 2048,
+        "name": "ImGuiViewportFlags_NoAutoMerge",
+        "value": "1 << 11"
+      },
+      {
+        "calc_value": 4096,
+        "name": "ImGuiViewportFlags_CanHostOtherWindows",
+        "value": "1 << 12"
       }
     ],
     "ImGuiWindowFlags_": [
@@ -2305,6 +2437,11 @@
         "value": "1 << 20"
       },
       {
+        "calc_value": 2097152,
+        "name": "ImGuiWindowFlags_NoDocking",
+        "value": "1 << 21"
+      },
+      {
         "calc_value": 786432,
         "name": "ImGuiWindowFlags_NoNav",
         "value": "ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus"
@@ -2348,77 +2485,86 @@
         "calc_value": 268435456,
         "name": "ImGuiWindowFlags_ChildMenu",
         "value": "1 << 28"
+      },
+      {
+        "calc_value": 536870912,
+        "name": "ImGuiWindowFlags_DockNodeHost",
+        "value": "1 << 29"
       }
     ]
   },
   "enumtypes": [],
   "locations": {
-    "ImColor": "imgui:2197",
-    "ImDrawChannel": "imgui:2291",
-    "ImDrawCmd": "imgui:2246",
-    "ImDrawCmdHeader": "imgui:2283",
-    "ImDrawCornerFlags_": "imgui:2315",
-    "ImDrawData": "imgui:2471",
-    "ImDrawList": "imgui:2349",
-    "ImDrawListFlags_": "imgui:2331",
-    "ImDrawListSplitter": "imgui:2300",
-    "ImDrawVert": "imgui:2268",
-    "ImFont": "imgui:2686",
-    "ImFontAtlas": "imgui:2587",
-    "ImFontAtlasCustomRect": "imgui:2549",
-    "ImFontAtlasFlags_": "imgui:2562",
-    "ImFontConfig": "imgui:2493",
-    "ImFontGlyph": "imgui:2522",
-    "ImFontGlyphRangesBuilder": "imgui:2534",
-    "ImGuiBackendFlags_": "imgui:1369",
-    "ImGuiButtonFlags_": "imgui:1475",
-    "ImGuiCol_": "imgui:1379",
-    "ImGuiColorEditFlags_": "imgui:1488",
-    "ImGuiComboFlags_": "imgui:1008",
-    "ImGuiCond_": "imgui:1580",
-    "ImGuiConfigFlags_": "imgui:1353",
-    "ImGuiDataType_": "imgui:1245",
-    "ImGuiDir_": "imgui:1261",
-    "ImGuiDragDropFlags_": "imgui:1223",
-    "ImGuiFocusedFlags_": "imgui:1195",
-    "ImGuiHoveredFlags_": "imgui:1207",
-    "ImGuiIO": "imgui:1740",
-    "ImGuiInputTextCallbackData": "imgui:1882",
-    "ImGuiInputTextFlags_": "imgui:923",
-    "ImGuiKeyModFlags_": "imgui:1308",
-    "ImGuiKey_": "imgui:1280",
-    "ImGuiListClipper": "imgui:2148",
-    "ImGuiMouseButton_": "imgui:1552",
-    "ImGuiMouseCursor_": "imgui:1562",
-    "ImGuiNavInput_": "imgui:1321",
-    "ImGuiOnceUponAFrame": "imgui:2026",
-    "ImGuiPayload": "imgui:1922",
-    "ImGuiPopupFlags_": "imgui:981",
-    "ImGuiSelectableFlags_": "imgui:997",
-    "ImGuiSizeCallbackData": "imgui:1913",
-    "ImGuiSliderFlags_": "imgui:1535",
-    "ImGuiSortDirection_": "imgui:1272",
-    "ImGuiStorage": "imgui:2088",
-    "ImGuiStoragePair": "imgui:2091",
-    "ImGuiStyle": "imgui:1686",
-    "ImGuiStyleVar_": "imgui:1444",
-    "ImGuiTabBarFlags_": "imgui:1022",
-    "ImGuiTabItemFlags_": "imgui:1038",
-    "ImGuiTableBgTarget_": "imgui:1186",
-    "ImGuiTableColumnFlags_": "imgui:1131",
-    "ImGuiTableColumnSortSpecs": "imgui:1944",
-    "ImGuiTableFlags_": "imgui:1074",
-    "ImGuiTableRowFlags_": "imgui:1171",
-    "ImGuiTableSortSpecs": "imgui:1958",
-    "ImGuiTextBuffer": "imgui:2061",
-    "ImGuiTextFilter": "imgui:2034",
-    "ImGuiTextRange": "imgui:2044",
-    "ImGuiTreeNodeFlags_": "imgui:952",
-    "ImGuiViewport": "imgui:2757",
-    "ImGuiViewportFlags_": "imgui:2742",
-    "ImGuiWindowFlags_": "imgui:883",
-    "ImVec2": "imgui:227",
-    "ImVec4": "imgui:240"
+    "ImColor": "imgui:2299",
+    "ImDrawChannel": "imgui:2393",
+    "ImDrawCmd": "imgui:2348",
+    "ImDrawCmdHeader": "imgui:2385",
+    "ImDrawCornerFlags_": "imgui:2417",
+    "ImDrawData": "imgui:2573",
+    "ImDrawList": "imgui:2451",
+    "ImDrawListFlags_": "imgui:2433",
+    "ImDrawListSplitter": "imgui:2402",
+    "ImDrawVert": "imgui:2370",
+    "ImFont": "imgui:2789",
+    "ImFontAtlas": "imgui:2690",
+    "ImFontAtlasCustomRect": "imgui:2652",
+    "ImFontAtlasFlags_": "imgui:2665",
+    "ImFontConfig": "imgui:2596",
+    "ImFontGlyph": "imgui:2625",
+    "ImFontGlyphRangesBuilder": "imgui:2637",
+    "ImGuiBackendFlags_": "imgui:1434",
+    "ImGuiButtonFlags_": "imgui:1547",
+    "ImGuiCol_": "imgui:1449",
+    "ImGuiColorEditFlags_": "imgui:1560",
+    "ImGuiComboFlags_": "imgui:1049",
+    "ImGuiCond_": "imgui:1652",
+    "ImGuiConfigFlags_": "imgui:1409",
+    "ImGuiDataType_": "imgui:1301",
+    "ImGuiDir_": "imgui:1317",
+    "ImGuiDockNodeFlags_": "imgui:1266",
+    "ImGuiDragDropFlags_": "imgui:1279",
+    "ImGuiFocusedFlags_": "imgui:1236",
+    "ImGuiHoveredFlags_": "imgui:1248",
+    "ImGuiIO": "imgui:1812",
+    "ImGuiInputTextCallbackData": "imgui:1962",
+    "ImGuiInputTextFlags_": "imgui:964",
+    "ImGuiKeyModFlags_": "imgui:1364",
+    "ImGuiKey_": "imgui:1336",
+    "ImGuiListClipper": "imgui:2250",
+    "ImGuiMouseButton_": "imgui:1624",
+    "ImGuiMouseCursor_": "imgui:1634",
+    "ImGuiNavInput_": "imgui:1377",
+    "ImGuiOnceUponAFrame": "imgui:2128",
+    "ImGuiPayload": "imgui:2024",
+    "ImGuiPlatformIO": "imgui:2952",
+    "ImGuiPlatformMonitor": "imgui:3016",
+    "ImGuiPopupFlags_": "imgui:1022",
+    "ImGuiSelectableFlags_": "imgui:1038",
+    "ImGuiSizeCallbackData": "imgui:1993",
+    "ImGuiSliderFlags_": "imgui:1607",
+    "ImGuiSortDirection_": "imgui:1328",
+    "ImGuiStorage": "imgui:2190",
+    "ImGuiStoragePair": "imgui:2193",
+    "ImGuiStyle": "imgui:1758",
+    "ImGuiStyleVar_": "imgui:1516",
+    "ImGuiTabBarFlags_": "imgui:1063",
+    "ImGuiTabItemFlags_": "imgui:1079",
+    "ImGuiTableBgTarget_": "imgui:1227",
+    "ImGuiTableColumnFlags_": "imgui:1172",
+    "ImGuiTableColumnSortSpecs": "imgui:2046",
+    "ImGuiTableFlags_": "imgui:1115",
+    "ImGuiTableRowFlags_": "imgui:1212",
+    "ImGuiTableSortSpecs": "imgui:2060",
+    "ImGuiTextBuffer": "imgui:2163",
+    "ImGuiTextFilter": "imgui:2136",
+    "ImGuiTextRange": "imgui:2146",
+    "ImGuiTreeNodeFlags_": "imgui:993",
+    "ImGuiViewport": "imgui:2870",
+    "ImGuiViewportFlags_": "imgui:2845",
+    "ImGuiWindowClass": "imgui:2008",
+    "ImGuiWindowFlags_": "imgui:921",
+    "ImVec2": "imgui:234",
+    "ImVec4": "imgui:247"
   },
   "structs": {
     "ImColor": [
@@ -2515,6 +2661,10 @@
       {
         "name": "FramebufferScale",
         "type": "ImVec2"
+      },
+      {
+        "name": "OwnerViewport",
+        "type": "ImGuiViewport*"
       }
     ],
     "ImDrawList": [
@@ -3022,6 +3172,38 @@
         "type": "ImVec2"
       },
       {
+        "name": "ConfigDockingNoSplit",
+        "type": "bool"
+      },
+      {
+        "name": "ConfigDockingWithShift",
+        "type": "bool"
+      },
+      {
+        "name": "ConfigDockingAlwaysTabBar",
+        "type": "bool"
+      },
+      {
+        "name": "ConfigDockingTransparentPayload",
+        "type": "bool"
+      },
+      {
+        "name": "ConfigViewportsNoAutoMerge",
+        "type": "bool"
+      },
+      {
+        "name": "ConfigViewportsNoTaskBarIcon",
+        "type": "bool"
+      },
+      {
+        "name": "ConfigViewportsNoDecoration",
+        "type": "bool"
+      },
+      {
+        "name": "ConfigViewportsNoDefaultParent",
+        "type": "bool"
+      },
+      {
         "name": "MouseDrawCursor",
         "type": "bool"
       },
@@ -3082,14 +3264,6 @@
         "type": "void*"
       },
       {
-        "name": "ImeSetInputScreenPosFn",
-        "type": "void(*)(int x,int y)"
-      },
-      {
-        "name": "ImeWindowHandle",
-        "type": "void*"
-      },
-      {
         "name": "MousePos",
         "type": "ImVec2"
       },
@@ -3105,6 +3279,10 @@
       {
         "name": "MouseWheelH",
         "type": "float"
+      },
+      {
+        "name": "MouseHoveredViewport",
+        "type": "ImGuiID"
       },
       {
         "name": "KeyCtrl",
@@ -3406,6 +3584,136 @@
         "type": "bool"
       }
     ],
+    "ImGuiPlatformIO": [
+      {
+        "name": "Platform_CreateWindow",
+        "type": "void(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_DestroyWindow",
+        "type": "void(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_ShowWindow",
+        "type": "void(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_SetWindowPos",
+        "type": "void(*)(ImGuiViewport* vp,ImVec2 pos)"
+      },
+      {
+        "name": "Platform_GetWindowPos",
+        "type": "ImVec2(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_SetWindowSize",
+        "type": "void(*)(ImGuiViewport* vp,ImVec2 size)"
+      },
+      {
+        "name": "Platform_GetWindowSize",
+        "type": "ImVec2(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_SetWindowFocus",
+        "type": "void(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_GetWindowFocus",
+        "type": "bool(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_GetWindowMinimized",
+        "type": "bool(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_SetWindowTitle",
+        "type": "void(*)(ImGuiViewport* vp,const char* str)"
+      },
+      {
+        "name": "Platform_SetWindowAlpha",
+        "type": "void(*)(ImGuiViewport* vp,float alpha)"
+      },
+      {
+        "name": "Platform_UpdateWindow",
+        "type": "void(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_RenderWindow",
+        "type": "void(*)(ImGuiViewport* vp,void* render_arg)"
+      },
+      {
+        "name": "Platform_SwapBuffers",
+        "type": "void(*)(ImGuiViewport* vp,void* render_arg)"
+      },
+      {
+        "name": "Platform_GetWindowDpiScale",
+        "type": "float(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_OnChangedViewport",
+        "type": "void(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Platform_SetImeInputPos",
+        "type": "void(*)(ImGuiViewport* vp,ImVec2 pos)"
+      },
+      {
+        "name": "Platform_CreateVkSurface",
+        "type": "int(*)(ImGuiViewport* vp,ImU64 vk_inst,const void* vk_allocators,ImU64* out_vk_surface)"
+      },
+      {
+        "name": "Renderer_CreateWindow",
+        "type": "void(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Renderer_DestroyWindow",
+        "type": "void(*)(ImGuiViewport* vp)"
+      },
+      {
+        "name": "Renderer_SetWindowSize",
+        "type": "void(*)(ImGuiViewport* vp,ImVec2 size)"
+      },
+      {
+        "name": "Renderer_RenderWindow",
+        "type": "void(*)(ImGuiViewport* vp,void* render_arg)"
+      },
+      {
+        "name": "Renderer_SwapBuffers",
+        "type": "void(*)(ImGuiViewport* vp,void* render_arg)"
+      },
+      {
+        "name": "Monitors",
+        "template_type": "ImGuiPlatformMonitor",
+        "type": "ImVector_ImGuiPlatformMonitor"
+      },
+      {
+        "name": "Viewports",
+        "template_type": "ImGuiViewport*",
+        "type": "ImVector_ImGuiViewportPtr"
+      }
+    ],
+    "ImGuiPlatformMonitor": [
+      {
+        "name": "MainPos",
+        "type": "ImVec2"
+      },
+      {
+        "name": "MainSize",
+        "type": "ImVec2"
+      },
+      {
+        "name": "WorkPos",
+        "type": "ImVec2"
+      },
+      {
+        "name": "WorkSize",
+        "type": "ImVec2"
+      },
+      {
+        "name": "DpiScale",
+        "type": "float"
+      }
+    ],
     "ImGuiSizeCallbackData": [
       {
         "name": "UserData",
@@ -3600,7 +3908,7 @@
       },
       {
         "name": "Colors[ImGuiCol_COUNT]",
-        "size": 53,
+        "size": 55,
         "type": "ImVec4"
       }
     ],
@@ -3672,6 +3980,10 @@
     ],
     "ImGuiViewport": [
       {
+        "name": "ID",
+        "type": "ImGuiID"
+      },
+      {
         "name": "Flags",
         "type": "ImGuiViewportFlags"
       },
@@ -3690,6 +4002,84 @@
       {
         "name": "WorkSize",
         "type": "ImVec2"
+      },
+      {
+        "name": "DpiScale",
+        "type": "float"
+      },
+      {
+        "name": "ParentViewportId",
+        "type": "ImGuiID"
+      },
+      {
+        "name": "DrawData",
+        "type": "ImDrawData*"
+      },
+      {
+        "name": "RendererUserData",
+        "type": "void*"
+      },
+      {
+        "name": "PlatformUserData",
+        "type": "void*"
+      },
+      {
+        "name": "PlatformHandle",
+        "type": "void*"
+      },
+      {
+        "name": "PlatformHandleRaw",
+        "type": "void*"
+      },
+      {
+        "name": "PlatformRequestMove",
+        "type": "bool"
+      },
+      {
+        "name": "PlatformRequestResize",
+        "type": "bool"
+      },
+      {
+        "name": "PlatformRequestClose",
+        "type": "bool"
+      }
+    ],
+    "ImGuiWindowClass": [
+      {
+        "name": "ClassId",
+        "type": "ImGuiID"
+      },
+      {
+        "name": "ParentViewportId",
+        "type": "ImGuiID"
+      },
+      {
+        "name": "ViewportFlagsOverrideSet",
+        "type": "ImGuiViewportFlags"
+      },
+      {
+        "name": "ViewportFlagsOverrideClear",
+        "type": "ImGuiViewportFlags"
+      },
+      {
+        "name": "TabItemFlagsOverrideSet",
+        "type": "ImGuiTabItemFlags"
+      },
+      {
+        "name": "DockNodeFlagsOverrideSet",
+        "type": "ImGuiDockNodeFlags"
+      },
+      {
+        "name": "DockNodeFlagsOverrideClear",
+        "type": "ImGuiDockNodeFlags"
+      },
+      {
+        "name": "DockingAlwaysTabBar",
+        "type": "bool"
+      },
+      {
+        "name": "DockingAllowUnclassed",
+        "type": "bool"
       }
     ],
     "ImVec2": [
