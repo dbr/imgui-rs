@@ -1,3 +1,18 @@
+//! The draw list lets you create custom graphics within a window.
+//!
+//! Each dear imgui window contains its own draw list. You can use
+//! [`Ui::get_window_draw_list`] to access the current window draw
+//! list and draw custom primitives. You can interleave normal widget
+//! calls and adding primitives to the current draw list.
+//!
+//! Interaction is mostly through the mtehods [`DrawListMut`] struct,
+//! such as [`DrawListMut::add_line`], however you can also construct
+//!  structs like [`Line`] directly, then call
+//!  `Line::build` with a reference to your draw list
+//!
+//! There are examples such as `draw_list.rs` and `custom_textures.rs`
+//! within the `imgui-examples` directory
+
 use bitflags::bitflags;
 
 use crate::ImColor32;
@@ -77,6 +92,7 @@ impl<'ui> DrawListMut<'ui> {
         }
     }
 
+    #[doc(alias = "GetWindowDrawList")]
     pub(crate) fn window(_: &Ui<'ui>) -> Self {
         Self::lock_draw_list();
         Self {
@@ -85,6 +101,7 @@ impl<'ui> DrawListMut<'ui> {
         }
     }
 
+    #[doc(alias = "GetBackgroundDrawList")]
     pub(crate) fn background(_: &Ui<'ui>) -> Self {
         Self::lock_draw_list();
         Self {
@@ -93,6 +110,7 @@ impl<'ui> DrawListMut<'ui> {
         }
     }
 
+    #[doc(alias = "GetForegroundDrawList")]
     pub(crate) fn foreground(_: &Ui<'ui>) -> Self {
         Self::lock_draw_list();
         Self {
@@ -120,6 +138,7 @@ impl<'ui> DrawListMut<'ui> {
     ///     });
     /// }
     /// ```
+    #[doc(alias = "ChannelsSplit")]
     pub fn channels_split<F: FnOnce(&ChannelsSplit)>(&self, channels_count: u32, f: F) {
         unsafe { sys::ImDrawList_ChannelsSplit(self.draw_list, channels_count as i32) };
         f(&ChannelsSplit {
@@ -142,6 +161,7 @@ impl<'ui> ChannelsSplit<'ui> {
     /// Change current channel.
     ///
     /// Panic if channel_index overflows the number of channels.
+    #[doc(alias = "ChannelsSetCurrent")]
     pub fn set_current(&self, channel_index: u32) {
         assert!(
             channel_index < self.channels_count,
@@ -158,6 +178,7 @@ impl<'ui> ChannelsSplit<'ui> {
 /// Drawing functions
 impl<'ui> DrawListMut<'ui> {
     /// Returns a line from point `p1` to `p2` with color `c`.
+    #[doc(alias = "AddLine")]
     pub fn add_line<C>(&'ui self, p1: [f32; 2], p2: [f32; 2], c: C) -> Line<'ui>
     where
         C: Into<ImColor32>,
@@ -167,6 +188,7 @@ impl<'ui> DrawListMut<'ui> {
 
     /// Returns a rectangle whose upper-left corner is at point `p1`
     /// and lower-right corner is at point `p2`, with color `c`.
+    #[doc(alias = "AddRectFilled", alias = "AddRect")]
     pub fn add_rect<C>(&'ui self, p1: [f32; 2], p2: [f32; 2], c: C) -> Rect<'ui>
     where
         C: Into<ImColor32>,
@@ -179,6 +201,7 @@ impl<'ui> DrawListMut<'ui> {
     /// The remains parameters are the respective color of the corners
     /// in the counter-clockwise starting from the upper-left corner
     /// first.
+    #[doc(alias = "AddRectFilledMultiColor")]
     pub fn add_rect_filled_multicolor<C1, C2, C3, C4>(
         &self,
         p1: [f32; 2],
@@ -208,6 +231,7 @@ impl<'ui> DrawListMut<'ui> {
 
     /// Returns a triangle with the given 3 vertices `p1`, `p2` and `p3`
     /// and color `c`.
+    #[doc(alias = "AddTriangleFilled", alias = "AddTriangle")]
     pub fn add_triangle<C>(
         &'ui self,
         p1: [f32; 2],
@@ -222,6 +246,7 @@ impl<'ui> DrawListMut<'ui> {
     }
 
     /// Returns a circle with the given `center`, `radius` and `color`.
+    #[doc(alias = "AddCircleFilled", alias = "AddCircle")]
     pub fn add_circle<C>(&'ui self, center: [f32; 2], radius: f32, color: C) -> Circle<'ui>
     where
         C: Into<ImColor32>,
@@ -230,6 +255,7 @@ impl<'ui> DrawListMut<'ui> {
     }
 
     /// Draw a text whose upper-left corner is at point `pos`.
+    #[doc(alias = "AddText")]
     pub fn add_text<C, T>(&self, pos: [f32; 2], col: C, text: T)
     where
         C: Into<ImColor32>,
@@ -247,6 +273,7 @@ impl<'ui> DrawListMut<'ui> {
 
     /// Returns a Bezier curve stretching from `pos0` to `pos1`, whose
     /// curvature is defined by `cp0` and `cp1`.
+    #[doc(alias = "AddBezier", alias = "AddBezierCubic")]
     pub fn add_bezier_curve<C>(
         &'ui self,
         pos0: [f32; 2],
@@ -265,6 +292,7 @@ impl<'ui> DrawListMut<'ui> {
     ///
     /// Clip all drawings done within the closure `f` in the given
     /// rectangle.
+    #[doc(alias = "PushClipRect", alias = "PopClipRect")]
     pub fn with_clip_rect<F>(&self, min: [f32; 2], max: [f32; 2], f: F)
     where
         F: FnOnce(),
@@ -279,6 +307,7 @@ impl<'ui> DrawListMut<'ui> {
     /// Clip all drawings done within the closure `f` in the given
     /// rectangle. Intersect with all clipping rectangle previously on
     /// the stack.
+    #[doc(alias = "PushClipRect", alias = "PopClipRect")]
     pub fn with_clip_rect_intersect<F>(&self, min: [f32; 2], max: [f32; 2], f: F)
     where
         F: FnOnce(),
@@ -565,6 +594,7 @@ pub struct Circle<'ui> {
 }
 
 impl<'ui> Circle<'ui> {
+    /// Typically constructed by [`DrawListMut::add_circle`]
     pub fn new<C>(draw_list: &'ui DrawListMut, center: [f32; 2], radius: f32, color: C) -> Self
     where
         C: Into<ImColor32>,
@@ -641,7 +671,8 @@ pub struct BezierCurve<'ui> {
 }
 
 impl<'ui> BezierCurve<'ui> {
-    fn new<C>(
+    /// Typically constructed by [`DrawListMut::add_bezier_curve`]
+    pub fn new<C>(
         draw_list: &'ui DrawListMut,
         pos0: [f32; 2],
         cp0: [f32; 2],
@@ -694,7 +725,8 @@ impl<'ui> BezierCurve<'ui> {
     }
 }
 
-/// Represents a image about to be drawn
+/// Image draw list primitive, not to be confused with the widget
+/// [`imgui::Image`](crate::Image).
 #[must_use = "should call .build() to draw the object"]
 pub struct Image<'ui> {
     texture_id: TextureId,
@@ -707,7 +739,8 @@ pub struct Image<'ui> {
 }
 
 impl<'ui> Image<'ui> {
-    fn new(
+    /// Typically constructed by [`DrawListMut::add_image`]
+    pub fn new(
         draw_list: &'ui DrawListMut,
         texture_id: TextureId,
         p_min: [f32; 2],
@@ -779,7 +812,8 @@ pub struct ImageQuad<'ui> {
 }
 
 impl<'ui> ImageQuad<'ui> {
-    fn new(
+    /// Typically constructed by [`DrawListMut::add_image_quad`]
+    pub fn new(
         draw_list: &'ui DrawListMut,
         texture_id: TextureId,
         p1: [f32; 2],
@@ -804,8 +838,8 @@ impl<'ui> ImageQuad<'ui> {
 
     /// Set uv coordinates of each point of the quad. If not called, defaults are:
     ///
-    /// ```
-    /// uv1: [0, 0],
+    /// ```text
+    /// uv1: [0.0, 0.0],
     /// uv2: [1, 0],
     /// uv3: [1, 1],
     /// uv4: [0, 1],
@@ -849,7 +883,8 @@ impl<'ui> ImageQuad<'ui> {
     }
 }
 
-/// Represents a image about to be drawn
+/// Represents a image about to be drawn. Similar to [`Image`] but
+/// with corners rounded with a given radius
 #[must_use = "should call .build() to draw the object"]
 pub struct ImageRounded<'ui> {
     texture_id: TextureId,
@@ -864,7 +899,8 @@ pub struct ImageRounded<'ui> {
 }
 
 impl<'ui> ImageRounded<'ui> {
-    fn new(
+    /// Typically constructed by [`DrawListMut::add_image_rounded`]
+    pub fn new(
         draw_list: &'ui DrawListMut,
         texture_id: TextureId,
         p_min: [f32; 2],

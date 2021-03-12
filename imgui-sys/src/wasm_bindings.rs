@@ -83,10 +83,14 @@ where
         }
     }
 }
-pub type __uint64_t = cty::c_ulong;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct ImGuiContext {
+    _unused: [u8; 0],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ImFontBuilderIO {
     _unused: [u8; 0],
 }
 #[repr(C)]
@@ -112,7 +116,6 @@ pub type ImGuiButtonFlags = cty::c_int;
 pub type ImGuiColorEditFlags = cty::c_int;
 pub type ImGuiConfigFlags = cty::c_int;
 pub type ImGuiComboFlags = cty::c_int;
-pub type ImGuiDockNodeFlags = cty::c_int;
 pub type ImGuiDragDropFlags = cty::c_int;
 pub type ImGuiFocusedFlags = cty::c_int;
 pub type ImGuiHoveredFlags = cty::c_int;
@@ -141,7 +144,6 @@ pub type ImWchar = ImWchar16;
 pub type ImU8 = cty::c_uchar;
 pub type ImS16 = cty::c_short;
 pub type ImU32 = cty::c_uint;
-pub type ImU64 = u64;
 pub type ImDrawCallback = ::core::option::Option<
     unsafe extern "C" fn(parent_list: *const ImDrawList, cmd: *const ImDrawCmd),
 >;
@@ -244,18 +246,6 @@ impl Default for ImVector_ImFontGlyph {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub struct ImVector_ImGuiPlatformMonitor {
-    pub Size: cty::c_int,
-    pub Capacity: cty::c_int,
-    pub Data: *mut ImGuiPlatformMonitor,
-}
-impl Default for ImVector_ImGuiPlatformMonitor {
-    fn default() -> Self {
-        unsafe { ::core::mem::zeroed() }
-    }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub struct ImVector_ImGuiStoragePair {
     pub Size: cty::c_int,
     pub Capacity: cty::c_int,
@@ -274,18 +264,6 @@ pub struct ImVector_ImGuiTextRange {
     pub Data: *mut ImGuiTextRange,
 }
 impl Default for ImVector_ImGuiTextRange {
-    fn default() -> Self {
-        unsafe { ::core::mem::zeroed() }
-    }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub struct ImVector_ImGuiViewportPtr {
-    pub Size: cty::c_int,
-    pub Capacity: cty::c_int,
-    pub Data: *mut *mut ImGuiViewport,
-}
-impl Default for ImVector_ImGuiViewportPtr {
     fn default() -> Self {
         unsafe { ::core::mem::zeroed() }
     }
@@ -409,7 +387,6 @@ pub const ImGuiWindowFlags_AlwaysUseWindowPadding: ImGuiWindowFlags_ = 65536;
 pub const ImGuiWindowFlags_NoNavInputs: ImGuiWindowFlags_ = 262144;
 pub const ImGuiWindowFlags_NoNavFocus: ImGuiWindowFlags_ = 524288;
 pub const ImGuiWindowFlags_UnsavedDocument: ImGuiWindowFlags_ = 1048576;
-pub const ImGuiWindowFlags_NoDocking: ImGuiWindowFlags_ = 2097152;
 pub const ImGuiWindowFlags_NoNav: ImGuiWindowFlags_ = 786432;
 pub const ImGuiWindowFlags_NoDecoration: ImGuiWindowFlags_ = 43;
 pub const ImGuiWindowFlags_NoInputs: ImGuiWindowFlags_ = 786944;
@@ -419,7 +396,6 @@ pub const ImGuiWindowFlags_Tooltip: ImGuiWindowFlags_ = 33554432;
 pub const ImGuiWindowFlags_Popup: ImGuiWindowFlags_ = 67108864;
 pub const ImGuiWindowFlags_Modal: ImGuiWindowFlags_ = 134217728;
 pub const ImGuiWindowFlags_ChildMenu: ImGuiWindowFlags_ = 268435456;
-pub const ImGuiWindowFlags_DockNodeHost: ImGuiWindowFlags_ = 536870912;
 pub type ImGuiWindowFlags_ = cty::c_uint;
 pub const ImGuiInputTextFlags_None: ImGuiInputTextFlags_ = 0;
 pub const ImGuiInputTextFlags_CharsDecimal: ImGuiInputTextFlags_ = 1;
@@ -601,14 +577,6 @@ pub const ImGuiHoveredFlags_AllowWhenDisabled: ImGuiHoveredFlags_ = 128;
 pub const ImGuiHoveredFlags_RectOnly: ImGuiHoveredFlags_ = 104;
 pub const ImGuiHoveredFlags_RootAndChildWindows: ImGuiHoveredFlags_ = 3;
 pub type ImGuiHoveredFlags_ = cty::c_uint;
-pub const ImGuiDockNodeFlags_None: ImGuiDockNodeFlags_ = 0;
-pub const ImGuiDockNodeFlags_KeepAliveOnly: ImGuiDockNodeFlags_ = 1;
-pub const ImGuiDockNodeFlags_NoDockingInCentralNode: ImGuiDockNodeFlags_ = 4;
-pub const ImGuiDockNodeFlags_PassthruCentralNode: ImGuiDockNodeFlags_ = 8;
-pub const ImGuiDockNodeFlags_NoSplit: ImGuiDockNodeFlags_ = 16;
-pub const ImGuiDockNodeFlags_NoResize: ImGuiDockNodeFlags_ = 32;
-pub const ImGuiDockNodeFlags_AutoHideTabBar: ImGuiDockNodeFlags_ = 64;
-pub type ImGuiDockNodeFlags_ = cty::c_uint;
 pub const ImGuiDragDropFlags_None: ImGuiDragDropFlags_ = 0;
 pub const ImGuiDragDropFlags_SourceNoPreviewTooltip: ImGuiDragDropFlags_ = 1;
 pub const ImGuiDragDropFlags_SourceNoDisableHover: ImGuiDragDropFlags_ = 2;
@@ -705,10 +673,6 @@ pub const ImGuiConfigFlags_NavEnableSetMousePos: ImGuiConfigFlags_ = 4;
 pub const ImGuiConfigFlags_NavNoCaptureKeyboard: ImGuiConfigFlags_ = 8;
 pub const ImGuiConfigFlags_NoMouse: ImGuiConfigFlags_ = 16;
 pub const ImGuiConfigFlags_NoMouseCursorChange: ImGuiConfigFlags_ = 32;
-pub const ImGuiConfigFlags_DockingEnable: ImGuiConfigFlags_ = 64;
-pub const ImGuiConfigFlags_ViewportsEnable: ImGuiConfigFlags_ = 1024;
-pub const ImGuiConfigFlags_DpiEnableScaleViewports: ImGuiConfigFlags_ = 16384;
-pub const ImGuiConfigFlags_DpiEnableScaleFonts: ImGuiConfigFlags_ = 32768;
 pub const ImGuiConfigFlags_IsSRGB: ImGuiConfigFlags_ = 1048576;
 pub const ImGuiConfigFlags_IsTouchScreen: ImGuiConfigFlags_ = 2097152;
 pub type ImGuiConfigFlags_ = cty::c_uint;
@@ -717,9 +681,6 @@ pub const ImGuiBackendFlags_HasGamepad: ImGuiBackendFlags_ = 1;
 pub const ImGuiBackendFlags_HasMouseCursors: ImGuiBackendFlags_ = 2;
 pub const ImGuiBackendFlags_HasSetMousePos: ImGuiBackendFlags_ = 4;
 pub const ImGuiBackendFlags_RendererHasVtxOffset: ImGuiBackendFlags_ = 8;
-pub const ImGuiBackendFlags_PlatformHasViewports: ImGuiBackendFlags_ = 1024;
-pub const ImGuiBackendFlags_HasMouseHoveredViewport: ImGuiBackendFlags_ = 2048;
-pub const ImGuiBackendFlags_RendererHasViewports: ImGuiBackendFlags_ = 4096;
 pub type ImGuiBackendFlags_ = cty::c_uint;
 pub const ImGuiCol_Text: ImGuiCol_ = 0;
 pub const ImGuiCol_TextDisabled: ImGuiCol_ = 1;
@@ -759,24 +720,22 @@ pub const ImGuiCol_TabHovered: ImGuiCol_ = 34;
 pub const ImGuiCol_TabActive: ImGuiCol_ = 35;
 pub const ImGuiCol_TabUnfocused: ImGuiCol_ = 36;
 pub const ImGuiCol_TabUnfocusedActive: ImGuiCol_ = 37;
-pub const ImGuiCol_DockingPreview: ImGuiCol_ = 38;
-pub const ImGuiCol_DockingEmptyBg: ImGuiCol_ = 39;
-pub const ImGuiCol_PlotLines: ImGuiCol_ = 40;
-pub const ImGuiCol_PlotLinesHovered: ImGuiCol_ = 41;
-pub const ImGuiCol_PlotHistogram: ImGuiCol_ = 42;
-pub const ImGuiCol_PlotHistogramHovered: ImGuiCol_ = 43;
-pub const ImGuiCol_TableHeaderBg: ImGuiCol_ = 44;
-pub const ImGuiCol_TableBorderStrong: ImGuiCol_ = 45;
-pub const ImGuiCol_TableBorderLight: ImGuiCol_ = 46;
-pub const ImGuiCol_TableRowBg: ImGuiCol_ = 47;
-pub const ImGuiCol_TableRowBgAlt: ImGuiCol_ = 48;
-pub const ImGuiCol_TextSelectedBg: ImGuiCol_ = 49;
-pub const ImGuiCol_DragDropTarget: ImGuiCol_ = 50;
-pub const ImGuiCol_NavHighlight: ImGuiCol_ = 51;
-pub const ImGuiCol_NavWindowingHighlight: ImGuiCol_ = 52;
-pub const ImGuiCol_NavWindowingDimBg: ImGuiCol_ = 53;
-pub const ImGuiCol_ModalWindowDimBg: ImGuiCol_ = 54;
-pub const ImGuiCol_COUNT: ImGuiCol_ = 55;
+pub const ImGuiCol_PlotLines: ImGuiCol_ = 38;
+pub const ImGuiCol_PlotLinesHovered: ImGuiCol_ = 39;
+pub const ImGuiCol_PlotHistogram: ImGuiCol_ = 40;
+pub const ImGuiCol_PlotHistogramHovered: ImGuiCol_ = 41;
+pub const ImGuiCol_TableHeaderBg: ImGuiCol_ = 42;
+pub const ImGuiCol_TableBorderStrong: ImGuiCol_ = 43;
+pub const ImGuiCol_TableBorderLight: ImGuiCol_ = 44;
+pub const ImGuiCol_TableRowBg: ImGuiCol_ = 45;
+pub const ImGuiCol_TableRowBgAlt: ImGuiCol_ = 46;
+pub const ImGuiCol_TextSelectedBg: ImGuiCol_ = 47;
+pub const ImGuiCol_DragDropTarget: ImGuiCol_ = 48;
+pub const ImGuiCol_NavHighlight: ImGuiCol_ = 49;
+pub const ImGuiCol_NavWindowingHighlight: ImGuiCol_ = 50;
+pub const ImGuiCol_NavWindowingDimBg: ImGuiCol_ = 51;
+pub const ImGuiCol_ModalWindowDimBg: ImGuiCol_ = 52;
+pub const ImGuiCol_COUNT: ImGuiCol_ = 53;
 pub type ImGuiCol_ = cty::c_uint;
 pub const ImGuiStyleVar_Alpha: ImGuiStyleVar_ = 0;
 pub const ImGuiStyleVar_WindowPadding: ImGuiStyleVar_ = 1;
@@ -913,7 +872,7 @@ pub struct ImGuiStyle {
     pub AntiAliasedFill: bool,
     pub CurveTessellationTol: f32,
     pub CircleSegmentMaxError: f32,
-    pub Colors: [ImVec4; 55usize],
+    pub Colors: [ImVec4; 53usize],
 }
 impl Default for ImGuiStyle {
     fn default() -> Self {
@@ -947,14 +906,6 @@ pub struct ImGuiIO {
     pub FontAllowUserScaling: bool,
     pub FontDefault: *mut ImFont,
     pub DisplayFramebufferScale: ImVec2,
-    pub ConfigDockingNoSplit: bool,
-    pub ConfigDockingWithShift: bool,
-    pub ConfigDockingAlwaysTabBar: bool,
-    pub ConfigDockingTransparentPayload: bool,
-    pub ConfigViewportsNoAutoMerge: bool,
-    pub ConfigViewportsNoTaskBarIcon: bool,
-    pub ConfigViewportsNoDecoration: bool,
-    pub ConfigViewportsNoDefaultParent: bool,
     pub MouseDrawCursor: bool,
     pub ConfigMacOSXBehaviors: bool,
     pub ConfigInputTextCursorBlink: bool,
@@ -974,11 +925,13 @@ pub struct ImGuiIO {
         unsafe extern "C" fn(user_data: *mut cty::c_void, text: *const cty::c_char),
     >,
     pub ClipboardUserData: *mut cty::c_void,
+    pub ImeSetInputScreenPosFn:
+        ::core::option::Option<unsafe extern "C" fn(x: cty::c_int, y: cty::c_int)>,
+    pub ImeWindowHandle: *mut cty::c_void,
     pub MousePos: ImVec2,
     pub MouseDown: [bool; 5usize],
     pub MouseWheel: f32,
     pub MouseWheelH: f32,
-    pub MouseHoveredViewport: ImGuiID,
     pub KeyCtrl: bool,
     pub KeyShift: bool,
     pub KeyAlt: bool,
@@ -1027,7 +980,7 @@ impl Default for ImGuiIO {
 }
 impl ::core::fmt::Debug for ImGuiIO {
     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        write ! (f , "ImGuiIO {{ ConfigFlags: {:?}, BackendFlags: {:?}, DisplaySize: {:?}, DeltaTime: {:?}, IniSavingRate: {:?}, IniFilename: {:?}, LogFilename: {:?}, MouseDoubleClickTime: {:?}, MouseDoubleClickMaxDist: {:?}, MouseDragThreshold: {:?}, KeyMap: {:?}, KeyRepeatDelay: {:?}, KeyRepeatRate: {:?}, UserData: {:?}, Fonts: {:?}, FontGlobalScale: {:?}, FontAllowUserScaling: {:?}, FontDefault: {:?}, DisplayFramebufferScale: {:?}, ConfigDockingNoSplit: {:?}, ConfigDockingWithShift: {:?}, ConfigDockingAlwaysTabBar: {:?}, ConfigDockingTransparentPayload: {:?}, ConfigViewportsNoAutoMerge: {:?}, ConfigViewportsNoTaskBarIcon: {:?}, ConfigViewportsNoDecoration: {:?}, ConfigViewportsNoDefaultParent: {:?}, MouseDrawCursor: {:?}, ConfigMacOSXBehaviors: {:?}, ConfigInputTextCursorBlink: {:?}, ConfigDragClickToInputText: {:?}, ConfigWindowsResizeFromEdges: {:?}, ConfigWindowsMoveFromTitleBarOnly: {:?}, ConfigMemoryCompactTimer: {:?}, BackendPlatformName: {:?}, BackendRendererName: {:?}, BackendPlatformUserData: {:?}, BackendRendererUserData: {:?}, BackendLanguageUserData: {:?}, GetClipboardTextFn: {:?}, SetClipboardTextFn: {:?}, ClipboardUserData: {:?}, MousePos: {:?}, MouseDown: {:?}, MouseWheel: {:?}, MouseWheelH: {:?}, MouseHoveredViewport: {:?}, KeyCtrl: {:?}, KeyShift: {:?}, KeyAlt: {:?}, KeySuper: {:?}, KeysDown: [...], NavInputs: {:?}, WantCaptureMouse: {:?}, WantCaptureKeyboard: {:?}, WantTextInput: {:?}, WantSetMousePos: {:?}, WantSaveIniSettings: {:?}, NavActive: {:?}, NavVisible: {:?}, Framerate: {:?}, MetricsRenderVertices: {:?}, MetricsRenderIndices: {:?}, MetricsRenderWindows: {:?}, MetricsActiveWindows: {:?}, MetricsActiveAllocations: {:?}, MouseDelta: {:?}, KeyMods: {:?}, MousePosPrev: {:?}, MouseClickedPos: {:?}, MouseClickedTime: {:?}, MouseClicked: {:?}, MouseDoubleClicked: {:?}, MouseReleased: {:?}, MouseDownOwned: {:?}, MouseDownWasDoubleClick: {:?}, MouseDownDuration: {:?}, MouseDownDurationPrev: {:?}, MouseDragMaxDistanceAbs: {:?}, MouseDragMaxDistanceSqr: {:?}, KeysDownDuration: [...], KeysDownDurationPrev: [...], NavInputsDownDuration: {:?}, NavInputsDownDurationPrev: {:?}, PenPressure: {:?}, InputQueueSurrogate: {:?}, InputQueueCharacters: {:?} }}" , self . ConfigFlags , self . BackendFlags , self . DisplaySize , self . DeltaTime , self . IniSavingRate , self . IniFilename , self . LogFilename , self . MouseDoubleClickTime , self . MouseDoubleClickMaxDist , self . MouseDragThreshold , self . KeyMap , self . KeyRepeatDelay , self . KeyRepeatRate , self . UserData , self . Fonts , self . FontGlobalScale , self . FontAllowUserScaling , self . FontDefault , self . DisplayFramebufferScale , self . ConfigDockingNoSplit , self . ConfigDockingWithShift , self . ConfigDockingAlwaysTabBar , self . ConfigDockingTransparentPayload , self . ConfigViewportsNoAutoMerge , self . ConfigViewportsNoTaskBarIcon , self . ConfigViewportsNoDecoration , self . ConfigViewportsNoDefaultParent , self . MouseDrawCursor , self . ConfigMacOSXBehaviors , self . ConfigInputTextCursorBlink , self . ConfigDragClickToInputText , self . ConfigWindowsResizeFromEdges , self . ConfigWindowsMoveFromTitleBarOnly , self . ConfigMemoryCompactTimer , self . BackendPlatformName , self . BackendRendererName , self . BackendPlatformUserData , self . BackendRendererUserData , self . BackendLanguageUserData , self . GetClipboardTextFn , self . SetClipboardTextFn , self . ClipboardUserData , self . MousePos , self . MouseDown , self . MouseWheel , self . MouseWheelH , self . MouseHoveredViewport , self . KeyCtrl , self . KeyShift , self . KeyAlt , self . KeySuper , self . NavInputs , self . WantCaptureMouse , self . WantCaptureKeyboard , self . WantTextInput , self . WantSetMousePos , self . WantSaveIniSettings , self . NavActive , self . NavVisible , self . Framerate , self . MetricsRenderVertices , self . MetricsRenderIndices , self . MetricsRenderWindows , self . MetricsActiveWindows , self . MetricsActiveAllocations , self . MouseDelta , self . KeyMods , self . MousePosPrev , self . MouseClickedPos , self . MouseClickedTime , self . MouseClicked , self . MouseDoubleClicked , self . MouseReleased , self . MouseDownOwned , self . MouseDownWasDoubleClick , self . MouseDownDuration , self . MouseDownDurationPrev , self . MouseDragMaxDistanceAbs , self . MouseDragMaxDistanceSqr , self . NavInputsDownDuration , self . NavInputsDownDurationPrev , self . PenPressure , self . InputQueueSurrogate , self . InputQueueCharacters)
+        write ! (f , "ImGuiIO {{ ConfigFlags: {:?}, BackendFlags: {:?}, DisplaySize: {:?}, DeltaTime: {:?}, IniSavingRate: {:?}, IniFilename: {:?}, LogFilename: {:?}, MouseDoubleClickTime: {:?}, MouseDoubleClickMaxDist: {:?}, MouseDragThreshold: {:?}, KeyMap: {:?}, KeyRepeatDelay: {:?}, KeyRepeatRate: {:?}, UserData: {:?}, Fonts: {:?}, FontGlobalScale: {:?}, FontAllowUserScaling: {:?}, FontDefault: {:?}, DisplayFramebufferScale: {:?}, MouseDrawCursor: {:?}, ConfigMacOSXBehaviors: {:?}, ConfigInputTextCursorBlink: {:?}, ConfigDragClickToInputText: {:?}, ConfigWindowsResizeFromEdges: {:?}, ConfigWindowsMoveFromTitleBarOnly: {:?}, ConfigMemoryCompactTimer: {:?}, BackendPlatformName: {:?}, BackendRendererName: {:?}, BackendPlatformUserData: {:?}, BackendRendererUserData: {:?}, BackendLanguageUserData: {:?}, GetClipboardTextFn: {:?}, SetClipboardTextFn: {:?}, ClipboardUserData: {:?}, ImeSetInputScreenPosFn: {:?}, ImeWindowHandle: {:?}, MousePos: {:?}, MouseDown: {:?}, MouseWheel: {:?}, MouseWheelH: {:?}, KeyCtrl: {:?}, KeyShift: {:?}, KeyAlt: {:?}, KeySuper: {:?}, KeysDown: [...], NavInputs: {:?}, WantCaptureMouse: {:?}, WantCaptureKeyboard: {:?}, WantTextInput: {:?}, WantSetMousePos: {:?}, WantSaveIniSettings: {:?}, NavActive: {:?}, NavVisible: {:?}, Framerate: {:?}, MetricsRenderVertices: {:?}, MetricsRenderIndices: {:?}, MetricsRenderWindows: {:?}, MetricsActiveWindows: {:?}, MetricsActiveAllocations: {:?}, MouseDelta: {:?}, KeyMods: {:?}, MousePosPrev: {:?}, MouseClickedPos: {:?}, MouseClickedTime: {:?}, MouseClicked: {:?}, MouseDoubleClicked: {:?}, MouseReleased: {:?}, MouseDownOwned: {:?}, MouseDownWasDoubleClick: {:?}, MouseDownDuration: {:?}, MouseDownDurationPrev: {:?}, MouseDragMaxDistanceAbs: {:?}, MouseDragMaxDistanceSqr: {:?}, KeysDownDuration: [...], KeysDownDurationPrev: [...], NavInputsDownDuration: {:?}, NavInputsDownDurationPrev: {:?}, PenPressure: {:?}, InputQueueSurrogate: {:?}, InputQueueCharacters: {:?} }}" , self . ConfigFlags , self . BackendFlags , self . DisplaySize , self . DeltaTime , self . IniSavingRate , self . IniFilename , self . LogFilename , self . MouseDoubleClickTime , self . MouseDoubleClickMaxDist , self . MouseDragThreshold , self . KeyMap , self . KeyRepeatDelay , self . KeyRepeatRate , self . UserData , self . Fonts , self . FontGlobalScale , self . FontAllowUserScaling , self . FontDefault , self . DisplayFramebufferScale , self . MouseDrawCursor , self . ConfigMacOSXBehaviors , self . ConfigInputTextCursorBlink , self . ConfigDragClickToInputText , self . ConfigWindowsResizeFromEdges , self . ConfigWindowsMoveFromTitleBarOnly , self . ConfigMemoryCompactTimer , self . BackendPlatformName , self . BackendRendererName , self . BackendPlatformUserData , self . BackendRendererUserData , self . BackendLanguageUserData , self . GetClipboardTextFn , self . SetClipboardTextFn , self . ClipboardUserData , self . ImeSetInputScreenPosFn , self . ImeWindowHandle , self . MousePos , self . MouseDown , self . MouseWheel , self . MouseWheelH , self . KeyCtrl , self . KeyShift , self . KeyAlt , self . KeySuper , self . NavInputs , self . WantCaptureMouse , self . WantCaptureKeyboard , self . WantTextInput , self . WantSetMousePos , self . WantSaveIniSettings , self . NavActive , self . NavVisible , self . Framerate , self . MetricsRenderVertices , self . MetricsRenderIndices , self . MetricsRenderWindows , self . MetricsActiveWindows , self . MetricsActiveAllocations , self . MouseDelta , self . KeyMods , self . MousePosPrev , self . MouseClickedPos , self . MouseClickedTime , self . MouseClicked , self . MouseDoubleClicked , self . MouseReleased , self . MouseDownOwned , self . MouseDownWasDoubleClick , self . MouseDownDuration , self . MouseDownDurationPrev , self . MouseDragMaxDistanceAbs , self . MouseDragMaxDistanceSqr , self . NavInputsDownDuration , self . NavInputsDownDurationPrev , self . PenPressure , self . InputQueueSurrogate , self . InputQueueCharacters)
     }
 }
 #[repr(C)]
@@ -1063,19 +1016,6 @@ impl Default for ImGuiSizeCallbackData {
     fn default() -> Self {
         unsafe { ::core::mem::zeroed() }
     }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
-pub struct ImGuiWindowClass {
-    pub ClassId: ImGuiID,
-    pub ParentViewportId: ImGuiID,
-    pub ViewportFlagsOverrideSet: ImGuiViewportFlags,
-    pub ViewportFlagsOverrideClear: ImGuiViewportFlags,
-    pub TabItemFlagsOverrideSet: ImGuiTabItemFlags,
-    pub DockNodeFlagsOverrideSet: ImGuiDockNodeFlags,
-    pub DockNodeFlagsOverrideClear: ImGuiDockNodeFlags,
-    pub DockingAlwaysTabBar: bool,
-    pub DockingAllowUnclassed: bool,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -1359,14 +1299,13 @@ impl Default for ImDrawList {
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct ImDrawData {
     pub Valid: bool,
-    pub CmdLists: *mut *mut ImDrawList,
     pub CmdListsCount: cty::c_int,
     pub TotalIdxCount: cty::c_int,
     pub TotalVtxCount: cty::c_int,
+    pub CmdLists: *mut *mut ImDrawList,
     pub DisplayPos: ImVec2,
     pub DisplaySize: ImVec2,
     pub FramebufferScale: ImVec2,
-    pub OwnerViewport: *mut ImGuiViewport,
 }
 impl Default for ImDrawData {
     fn default() -> Self {
@@ -1390,7 +1329,7 @@ pub struct ImFontConfig {
     pub GlyphMinAdvanceX: f32,
     pub GlyphMaxAdvanceX: f32,
     pub MergeMode: bool,
-    pub RasterizerFlags: cty::c_uint,
+    pub FontBuilderFlags: cty::c_uint,
     pub RasterizerMultiply: f32,
     pub EllipsisChar: ImWchar,
     pub Name: [cty::c_char; 40usize],
@@ -1403,7 +1342,7 @@ impl Default for ImFontConfig {
 }
 impl ::core::fmt::Debug for ImFontConfig {
     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        write ! (f , "ImFontConfig {{ FontData: {:?}, FontDataSize: {:?}, FontDataOwnedByAtlas: {:?}, FontNo: {:?}, SizePixels: {:?}, OversampleH: {:?}, OversampleV: {:?}, PixelSnapH: {:?}, GlyphExtraSpacing: {:?}, GlyphOffset: {:?}, GlyphRanges: {:?}, GlyphMinAdvanceX: {:?}, GlyphMaxAdvanceX: {:?}, MergeMode: {:?}, RasterizerFlags: {:?}, RasterizerMultiply: {:?}, EllipsisChar: {:?}, Name: [...], DstFont: {:?} }}" , self . FontData , self . FontDataSize , self . FontDataOwnedByAtlas , self . FontNo , self . SizePixels , self . OversampleH , self . OversampleV , self . PixelSnapH , self . GlyphExtraSpacing , self . GlyphOffset , self . GlyphRanges , self . GlyphMinAdvanceX , self . GlyphMaxAdvanceX , self . MergeMode , self . RasterizerFlags , self . RasterizerMultiply , self . EllipsisChar , self . DstFont)
+        write ! (f , "ImFontConfig {{ FontData: {:?}, FontDataSize: {:?}, FontDataOwnedByAtlas: {:?}, FontNo: {:?}, SizePixels: {:?}, OversampleH: {:?}, OversampleV: {:?}, PixelSnapH: {:?}, GlyphExtraSpacing: {:?}, GlyphOffset: {:?}, GlyphRanges: {:?}, GlyphMinAdvanceX: {:?}, GlyphMaxAdvanceX: {:?}, MergeMode: {:?}, FontBuilderFlags: {:?}, RasterizerMultiply: {:?}, EllipsisChar: {:?}, Name: [...], DstFont: {:?} }}" , self . FontData , self . FontDataSize , self . FontDataOwnedByAtlas , self . FontNo , self . SizePixels , self . OversampleH , self . OversampleV , self . PixelSnapH , self . GlyphExtraSpacing , self . GlyphOffset , self . GlyphRanges , self . GlyphMinAdvanceX , self . GlyphMaxAdvanceX , self . MergeMode , self . FontBuilderFlags , self . RasterizerMultiply , self . EllipsisChar , self . DstFont)
     }
 }
 #[repr(C)]
@@ -1422,41 +1361,57 @@ pub struct ImFontGlyph {
 }
 impl ImFontGlyph {
     #[inline]
-    pub fn Codepoint(&self) -> cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 31u8) as u32) }
+    pub fn Colored(&self) -> cty::c_uint {
+        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
     }
     #[inline]
-    pub fn set_Codepoint(&mut self, val: cty::c_uint) {
+    pub fn set_Colored(&mut self, val: cty::c_uint) {
         unsafe {
             let val: u32 = ::core::mem::transmute(val);
-            self._bitfield_1.set(0usize, 31u8, val as u64)
+            self._bitfield_1.set(0usize, 1u8, val as u64)
         }
     }
     #[inline]
     pub fn Visible(&self) -> cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(31usize, 1u8) as u32) }
+        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
     }
     #[inline]
     pub fn set_Visible(&mut self, val: cty::c_uint) {
         unsafe {
             let val: u32 = ::core::mem::transmute(val);
-            self._bitfield_1.set(31usize, 1u8, val as u64)
+            self._bitfield_1.set(1usize, 1u8, val as u64)
+        }
+    }
+    #[inline]
+    pub fn Codepoint(&self) -> cty::c_uint {
+        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 30u8) as u32) }
+    }
+    #[inline]
+    pub fn set_Codepoint(&mut self, val: cty::c_uint) {
+        unsafe {
+            let val: u32 = ::core::mem::transmute(val);
+            self._bitfield_1.set(2usize, 30u8, val as u64)
         }
     }
     #[inline]
     pub fn new_bitfield_1(
-        Codepoint: cty::c_uint,
+        Colored: cty::c_uint,
         Visible: cty::c_uint,
+        Codepoint: cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 4usize], u32> {
         let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize], u32> =
             Default::default();
-        __bindgen_bitfield_unit.set(0usize, 31u8, {
-            let Codepoint: u32 = unsafe { ::core::mem::transmute(Codepoint) };
-            Codepoint as u64
+        __bindgen_bitfield_unit.set(0usize, 1u8, {
+            let Colored: u32 = unsafe { ::core::mem::transmute(Colored) };
+            Colored as u64
         });
-        __bindgen_bitfield_unit.set(31usize, 1u8, {
+        __bindgen_bitfield_unit.set(1usize, 1u8, {
             let Visible: u32 = unsafe { ::core::mem::transmute(Visible) };
             Visible as u64
+        });
+        __bindgen_bitfield_unit.set(2usize, 30u8, {
+            let Codepoint: u32 = unsafe { ::core::mem::transmute(Codepoint) };
+            Codepoint as u64
         });
         __bindgen_bitfield_unit
     }
@@ -1511,6 +1466,8 @@ pub struct ImFontAtlas {
     pub CustomRects: ImVector_ImFontAtlasCustomRect,
     pub ConfigData: ImVector_ImFontConfig,
     pub TexUvLines: [ImVec4; 64usize],
+    pub FontBuilderIO: *const ImFontBuilderIO,
+    pub FontBuilderFlags: cty::c_uint,
     pub PackIdMouseCursors: cty::c_int,
     pub PackIdLines: cty::c_int,
 }
@@ -1521,7 +1478,7 @@ impl Default for ImFontAtlas {
 }
 impl ::core::fmt::Debug for ImFontAtlas {
     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        write ! (f , "ImFontAtlas {{ Locked: {:?}, Flags: {:?}, TexID: {:?}, TexDesiredWidth: {:?}, TexGlyphPadding: {:?}, TexPixelsAlpha8: {:?}, TexPixelsRGBA32: {:?}, TexWidth: {:?}, TexHeight: {:?}, TexUvScale: {:?}, TexUvWhitePixel: {:?}, Fonts: {:?}, CustomRects: {:?}, ConfigData: {:?}, TexUvLines: [...], PackIdMouseCursors: {:?}, PackIdLines: {:?} }}" , self . Locked , self . Flags , self . TexID , self . TexDesiredWidth , self . TexGlyphPadding , self . TexPixelsAlpha8 , self . TexPixelsRGBA32 , self . TexWidth , self . TexHeight , self . TexUvScale , self . TexUvWhitePixel , self . Fonts , self . CustomRects , self . ConfigData , self . PackIdMouseCursors , self . PackIdLines)
+        write ! (f , "ImFontAtlas {{ Locked: {:?}, Flags: {:?}, TexID: {:?}, TexDesiredWidth: {:?}, TexGlyphPadding: {:?}, TexPixelsAlpha8: {:?}, TexPixelsRGBA32: {:?}, TexWidth: {:?}, TexHeight: {:?}, TexUvScale: {:?}, TexUvWhitePixel: {:?}, Fonts: {:?}, CustomRects: {:?}, ConfigData: {:?}, TexUvLines: [...], FontBuilderIO: {:?}, FontBuilderFlags: {:?}, PackIdMouseCursors: {:?}, PackIdLines: {:?} }}" , self . Locked , self . Flags , self . TexID , self . TexDesiredWidth , self . TexGlyphPadding , self . TexPixelsAlpha8 , self . TexPixelsRGBA32 , self . TexWidth , self . TexHeight , self . TexUvScale , self . TexUvWhitePixel , self . Fonts , self . CustomRects , self . ConfigData , self . FontBuilderIO , self . FontBuilderFlags , self . PackIdMouseCursors , self . PackIdLines)
     }
 }
 #[repr(C)]
@@ -1550,118 +1507,19 @@ impl Default for ImFont {
         unsafe { ::core::mem::zeroed() }
     }
 }
-#[repr(C)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub struct ImGuiPlatformIO {
-    pub Platform_CreateWindow: ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport)>,
-    pub Platform_DestroyWindow:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport)>,
-    pub Platform_ShowWindow: ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport)>,
-    pub Platform_SetWindowPos:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport, pos: ImVec2)>,
-    pub Platform_GetWindowPos:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport) -> ImVec2>,
-    pub Platform_SetWindowSize:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport, size: ImVec2)>,
-    pub Platform_GetWindowSize:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport) -> ImVec2>,
-    pub Platform_SetWindowFocus:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport)>,
-    pub Platform_GetWindowFocus:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport) -> bool>,
-    pub Platform_GetWindowMinimized:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport) -> bool>,
-    pub Platform_SetWindowTitle: ::core::option::Option<
-        unsafe extern "C" fn(vp: *mut ImGuiViewport, str_: *const cty::c_char),
-    >,
-    pub Platform_SetWindowAlpha:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport, alpha: f32)>,
-    pub Platform_UpdateWindow: ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport)>,
-    pub Platform_RenderWindow: ::core::option::Option<
-        unsafe extern "C" fn(vp: *mut ImGuiViewport, render_arg: *mut cty::c_void),
-    >,
-    pub Platform_SwapBuffers: ::core::option::Option<
-        unsafe extern "C" fn(vp: *mut ImGuiViewport, render_arg: *mut cty::c_void),
-    >,
-    pub Platform_GetWindowDpiScale:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport) -> f32>,
-    pub Platform_OnChangedViewport:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport)>,
-    pub Platform_SetImeInputPos:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport, pos: ImVec2)>,
-    pub Platform_CreateVkSurface: ::core::option::Option<
-        unsafe extern "C" fn(
-            vp: *mut ImGuiViewport,
-            vk_inst: ImU64,
-            vk_allocators: *const cty::c_void,
-            out_vk_surface: *mut ImU64,
-        ) -> cty::c_int,
-    >,
-    pub Renderer_CreateWindow: ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport)>,
-    pub Renderer_DestroyWindow:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport)>,
-    pub Renderer_SetWindowSize:
-        ::core::option::Option<unsafe extern "C" fn(vp: *mut ImGuiViewport, size: ImVec2)>,
-    pub Renderer_RenderWindow: ::core::option::Option<
-        unsafe extern "C" fn(vp: *mut ImGuiViewport, render_arg: *mut cty::c_void),
-    >,
-    pub Renderer_SwapBuffers: ::core::option::Option<
-        unsafe extern "C" fn(vp: *mut ImGuiViewport, render_arg: *mut cty::c_void),
-    >,
-    pub Monitors: ImVector_ImGuiPlatformMonitor,
-    pub MainViewport: *mut ImGuiViewport,
-    pub Viewports: ImVector_ImGuiViewportPtr,
-}
-impl Default for ImGuiPlatformIO {
-    fn default() -> Self {
-        unsafe { ::core::mem::zeroed() }
-    }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy, Clone, PartialEq)]
-pub struct ImGuiPlatformMonitor {
-    pub MainPos: ImVec2,
-    pub MainSize: ImVec2,
-    pub WorkPos: ImVec2,
-    pub WorkSize: ImVec2,
-    pub DpiScale: f32,
-}
 pub const ImGuiViewportFlags_None: ImGuiViewportFlags_ = 0;
-pub const ImGuiViewportFlags_NoDecoration: ImGuiViewportFlags_ = 1;
-pub const ImGuiViewportFlags_NoTaskBarIcon: ImGuiViewportFlags_ = 2;
-pub const ImGuiViewportFlags_NoFocusOnAppearing: ImGuiViewportFlags_ = 4;
-pub const ImGuiViewportFlags_NoFocusOnClick: ImGuiViewportFlags_ = 8;
-pub const ImGuiViewportFlags_NoInputs: ImGuiViewportFlags_ = 16;
-pub const ImGuiViewportFlags_NoRendererClear: ImGuiViewportFlags_ = 32;
-pub const ImGuiViewportFlags_TopMost: ImGuiViewportFlags_ = 64;
-pub const ImGuiViewportFlags_Minimized: ImGuiViewportFlags_ = 128;
-pub const ImGuiViewportFlags_NoAutoMerge: ImGuiViewportFlags_ = 256;
-pub const ImGuiViewportFlags_CanHostOtherWindows: ImGuiViewportFlags_ = 512;
+pub const ImGuiViewportFlags_IsPlatformWindow: ImGuiViewportFlags_ = 1;
+pub const ImGuiViewportFlags_IsPlatformMonitor: ImGuiViewportFlags_ = 2;
+pub const ImGuiViewportFlags_OwnedByApp: ImGuiViewportFlags_ = 4;
 pub type ImGuiViewportFlags_ = cty::c_uint;
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct ImGuiViewport {
-    pub ID: ImGuiID,
     pub Flags: ImGuiViewportFlags,
     pub Pos: ImVec2,
     pub Size: ImVec2,
-    pub WorkOffsetMin: ImVec2,
-    pub WorkOffsetMax: ImVec2,
-    pub DpiScale: f32,
-    pub DrawData: *mut ImDrawData,
-    pub ParentViewportId: ImGuiID,
-    pub RendererUserData: *mut cty::c_void,
-    pub PlatformUserData: *mut cty::c_void,
-    pub PlatformHandle: *mut cty::c_void,
-    pub PlatformHandleRaw: *mut cty::c_void,
-    pub PlatformRequestMove: bool,
-    pub PlatformRequestResize: bool,
-    pub PlatformRequestClose: bool,
-}
-impl Default for ImGuiViewport {
-    fn default() -> Self {
-        unsafe { ::core::mem::zeroed() }
-    }
+    pub WorkPos: ImVec2,
+    pub WorkSize: ImVec2,
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
@@ -1819,14 +1677,6 @@ extern "C" {
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
-    pub fn igGetWindowDpiScale() -> f32;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igGetWindowViewport() -> *mut ImGuiViewport;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
     pub fn igGetWindowPos(pOut: *mut ImVec2);
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
@@ -1873,10 +1723,6 @@ extern "C" {
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
     pub fn igSetNextWindowBgAlpha(alpha: f32);
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igSetNextWindowViewport(viewport_id: ImGuiID);
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
@@ -2950,6 +2796,14 @@ extern "C" {
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
+    pub fn igBeginListBox(label: *const cty::c_char, size: ImVec2) -> bool;
+}
+#[link(wasm_import_module = "imgui-sys-v0")]
+extern "C" {
+    pub fn igEndListBox();
+}
+#[link(wasm_import_module = "imgui-sys-v0")]
+extern "C" {
     pub fn igListBoxStr_arr(
         label: *const cty::c_char,
         current_item: *mut cty::c_int,
@@ -2974,22 +2828,6 @@ extern "C" {
         items_count: cty::c_int,
         height_in_items: cty::c_int,
     ) -> bool;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igListBoxHeaderVec2(label: *const cty::c_char, size: ImVec2) -> bool;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igListBoxHeaderInt(
-        label: *const cty::c_char,
-        items_count: cty::c_int,
-        height_in_items: cty::c_int,
-    ) -> bool;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igListBoxFooter();
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
@@ -3311,39 +3149,6 @@ extern "C" {
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
-    pub fn igDockSpace(
-        id: ImGuiID,
-        size: ImVec2,
-        flags: ImGuiDockNodeFlags,
-        window_class: *const ImGuiWindowClass,
-    );
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igDockSpaceOverViewport(
-        viewport: *mut ImGuiViewport,
-        flags: ImGuiDockNodeFlags,
-        window_class: *const ImGuiWindowClass,
-    ) -> ImGuiID;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igSetNextWindowDockID(dock_id: ImGuiID, cond: ImGuiCond);
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igSetNextWindowClass(window_class: *const ImGuiWindowClass);
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igGetWindowDockID() -> ImGuiID;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igIsWindowDocked() -> bool;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
     pub fn igLogToTTY(auto_open_depth: cty::c_int);
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
@@ -3488,6 +3293,10 @@ extern "C" {
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
+    pub fn igGetMainViewport() -> *mut ImGuiViewport;
+}
+#[link(wasm_import_module = "imgui-sys-v0")]
+extern "C" {
     pub fn igIsRectVisibleNil(size: ImVec2) -> bool;
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
@@ -3504,19 +3313,11 @@ extern "C" {
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
-    pub fn igGetBackgroundDrawListNil() -> *mut ImDrawList;
+    pub fn igGetBackgroundDrawList() -> *mut ImDrawList;
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
-    pub fn igGetForegroundDrawListNil() -> *mut ImDrawList;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igGetBackgroundDrawListViewportPtr(viewport: *mut ImGuiViewport) -> *mut ImDrawList;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igGetForegroundDrawListViewportPtr(viewport: *mut ImGuiViewport) -> *mut ImDrawList;
+    pub fn igGetForegroundDrawList() -> *mut ImDrawList;
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
@@ -3734,37 +3535,6 @@ extern "C" {
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
-    pub fn igGetPlatformIO() -> *mut ImGuiPlatformIO;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igGetMainViewport() -> *mut ImGuiViewport;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igUpdatePlatformWindows();
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igRenderPlatformWindowsDefault(
-        platform_render_arg: *mut cty::c_void,
-        renderer_render_arg: *mut cty::c_void,
-    );
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igDestroyPlatformWindows();
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igFindViewportByID(id: ImGuiID) -> *mut ImGuiViewport;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn igFindViewportByPlatformHandle(platform_handle: *mut cty::c_void) -> *mut ImGuiViewport;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
     pub fn ImGuiStyle_ImGuiStyle() -> *mut ImGuiStyle;
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
@@ -3835,14 +3605,6 @@ extern "C" {
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
     pub fn ImGuiInputTextCallbackData_HasSelection(self_: *mut ImGuiInputTextCallbackData) -> bool;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn ImGuiWindowClass_ImGuiWindowClass() -> *mut ImGuiWindowClass;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn ImGuiWindowClass_destroy(self_: *mut ImGuiWindowClass);
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
@@ -5081,22 +4843,6 @@ extern "C" {
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
-    pub fn ImGuiPlatformIO_ImGuiPlatformIO() -> *mut ImGuiPlatformIO;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn ImGuiPlatformIO_destroy(self_: *mut ImGuiPlatformIO);
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn ImGuiPlatformMonitor_ImGuiPlatformMonitor() -> *mut ImGuiPlatformMonitor;
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn ImGuiPlatformMonitor_destroy(self_: *mut ImGuiPlatformMonitor);
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
     pub fn ImGuiViewport_ImGuiViewport() -> *mut ImGuiViewport;
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
@@ -5109,11 +4855,7 @@ extern "C" {
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
-    pub fn ImGuiViewport_GetWorkPos(pOut: *mut ImVec2, self_: *mut ImGuiViewport);
-}
-#[link(wasm_import_module = "imgui-sys-v0")]
-extern "C" {
-    pub fn ImGuiViewport_GetWorkSize(pOut: *mut ImVec2, self_: *mut ImGuiViewport);
+    pub fn ImGuiViewport_GetWorkCenter(pOut: *mut ImVec2, self_: *mut ImGuiViewport);
 }
 #[link(wasm_import_module = "imgui-sys-v0")]
 extern "C" {
