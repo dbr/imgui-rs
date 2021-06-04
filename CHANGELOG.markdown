@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- BREAKING: Modifies `build` style methods to allow the provide closure to return a value.  The build call will then return Some(value) if the closure is called, and None if it isn't.
+ - The most likely breaking changes users will see is that they will need to add semicolons after calling `build`, because these function no longer return `()`.
+
 - BREAKING: Created `with_x` variants for most functions which previously took multiple parameters where some had default arguments in the C++. This makes calling most functions simpler and more similar to the C++.
  - The most likely breaking changes users will see is `button` and `same_line` now take one fewer parameter -- if you were calling `button` with `[0.0, 0.0]`, simply delete that -- otherwise, call `button_with_size`. Similarly, for `same_line`, if you were passing in `0.0.` simply delete that parameter. Otherwise, call `same_line_with_pos`.
 
@@ -20,8 +23,29 @@
 
 - BREAKING: `PopupModal`'s `new` was reworked so that it didn't take `Ui` until `build` was called. This is a breaking change if you were invoking it directly. Simply move your `ui` call to `build` or `begin`.
 
-- Upgrade to [Dear ImGui v1.81](https://github.com/ocornut/imgui/releases/tag/v1.81)
+- Upgrade to from v1.80 to [Dear ImGui v1.82](https://github.com/ocornut/imgui/releases/tag/v1.82) (see also the [Dear ImGui v1.81](https://github.com/ocornut/imgui/releases/tag/v1.81) release notes)
     - BREAKING: `imgui::ListBox::calculate_size(items_count: ..., height_in_items: ...)` has been removed as the function backing it has been marked as obsolete. The recommended approach is to calculate the size yourself and use `.size(...)` (or use the default auto-calculated size)
+    - BREAKING: `draw_list::CornerFlags` has been renamed to `draw_list::DrawFlags` to match the upstream change, and refle. However, the only draw flags that are useful to Rust currently are still the ones reflecting corner rounding.
+        - Similarly, the flag names have been updated so that `CornerFlags::$WHERE` has become `DrawFlags::ROUND_CORNERS_$WHERE`, for ecample `CornerFlags::TOP_LEFT` => `DrawFlags::ROUND_CORNERS_TOP_LEFT`.
+        - Importantly, `CornerFlags::NONE` became `DrawFlags::ROUND_CORNERS_NONE` (following the patter) and **not** `DrawFlags::NONE` which does exist now, and is a separate value.
+    - BREAKING: `InputTextFlags::ALWAYS_INSERT_MODE` is renamed to `InputTextFlags::
+        - However, the `always_insert_mode` funcitons on the various input builders remain as a (non-deprecated) alias, as the C++ code has kept an equivalent inline stub.
+    - BREAKING: `Style::circle_segment_max_error` is no more. `Style::circle_tesselation_max_error` behaves very similarly, but `circle_segment_max_error` values are not equivalent to `circle_tesselation_max_error` values.
+        - For example, the default `circle_segment_max_error` was 1.6, but the default `circle_tesselation_max_error` is 0.3. In practice, it's unlikely to matter much either way, though.
+
+- Restored methods to access keyboard based on backend-defined keyboard map indexes. These allow access to most keys, not just those defined in the small subset of `imgui::Keys` (note the available keys may be expanded in future by [imgui PR #2625](https://github.com/ocornut/imgui/pull/2625))
+    - The new methods on `imgui::Ui` are `is_key_index_down`, `is_key_index_pressed`, `is_key_index_pressed_no_repeat`, `is_key_index_released`, `is_key_index_released`
+    - For example `ui.is_key_released(imgui::Key::A)` is same as `ui.is_key_index_released(winit::events::VirtualKeyCode::A as i32)` when using the winit backend
+
+- Full (32-bit) unicode support is enabled in Dear Imgui (e.g. `-DIMGUI_USE_WCHAR32` is enabled now).  Previously UTF-16 was used internally.
+    - BREAKING: Some parts of the font atlas code now use `char` (or `u32`) instead of `u16` to reflect this.
+        - Note: `u32` is used over `char` in some situations, such as when surrogates are allowed
+    - BREAKING (sorta): Dear Imgui now will use 32 bits for character data internally. This impacts the ABI, including sizes of structs and such, and can break some low level or advanced use cases:
+        - If you're linking against extensions or plugins to Dear Imgui not written in Rust, you need to ensure it is built using `-DIMGUI_USE_WCHAR32`.
+            - However, if the `DEP_IMGUI_DEFINE_` vars are [used properly](https://github.com/4bb4/implot-rs/blob/f2a4c6a3d8919ec3438631873ce6a9f94135089c/implot-sys/build.rs#L37-L45), this is non-breaking.
+        - If you're using `features="wasm"` to "link" against emscripten-compiled Dear Imgui, you need to ensure you use `-DIMGUI_USE_WCHAR32` when compile the C and C++ code.
+            - If you're using `DEP_IMGUI_DEFINE_`s for this already, then no change is needed.
+        - If you're using `.cargo/config` to apply a build script override and link against a prebuilt `Dear Imgui` (or something else along these lines), you need to ensure you link with a version that was built using `-DIMGUI_USE_WCHAR32`.
 
 ## [0.7.0] - 2021-02-04
 

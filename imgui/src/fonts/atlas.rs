@@ -32,7 +32,6 @@ pub struct FontId(pub(crate) *const Font);
 /// A font atlas that builds a single texture
 #[repr(C)]
 pub struct FontAtlas {
-    locked: bool,
     /// Configuration flags
     pub flags: FontAtlasFlags,
     /// Texture identifier
@@ -48,6 +47,8 @@ pub struct FontAtlas {
     /// this to 0.
     pub tex_glyph_padding: i32,
 
+    locked: bool,
+    tex_pixels_use_colors: bool,
     tex_pixels_alpha8: *mut u8,
     tex_pixels_rgba32: *mut u32,
     tex_width: i32,
@@ -263,6 +264,7 @@ fn test_font_atlas_memory_layout() {
     assert_field_offset!(tex_id, TexID);
     assert_field_offset!(tex_desired_width, TexDesiredWidth);
     assert_field_offset!(tex_glyph_padding, TexGlyphPadding);
+    assert_field_offset!(tex_pixels_use_colors, TexPixelsUseColors);
     assert_field_offset!(tex_pixels_alpha8, TexPixelsAlpha8);
     assert_field_offset!(tex_pixels_rgba32, TexPixelsRGBA32);
     assert_field_offset!(tex_width, TexWidth);
@@ -355,7 +357,8 @@ impl FontConfig {
         raw.GlyphMaxAdvanceX = self.glyph_max_advance_x;
         raw.FontBuilderFlags = self.font_builder_flags;
         raw.RasterizerMultiply = self.rasterizer_multiply;
-        raw.EllipsisChar = self.ellipsis_char.map(|x| x as u16).unwrap_or(0xffff);
+        // char is used as "unset" for EllipsisChar
+        raw.EllipsisChar = self.ellipsis_char.map(|c| c as u32).unwrap_or(!0);
         if let Some(name) = self.name.as_ref() {
             let bytes = name.as_bytes();
             let mut len = bytes.len().min(raw.Name.len() - 1);
